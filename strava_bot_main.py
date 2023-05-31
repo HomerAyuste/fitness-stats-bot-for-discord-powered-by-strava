@@ -6,24 +6,20 @@ TOKEN = 'MTExMzUwMjg4Njk0NTYyMDA4MA.GvyyGP.625SpJYyUXlsSTNhykK_LSq9V4wVQNLD0QU-R
 intents = discord.Intents.default()
 intents.message_content = True
 
-bot = discord.Bot(command_prefix = '$',intents=intents)
+bot = commands.Bot(command_prefix = '$',intents=intents)
 
 @bot.event
 async def on_ready():
     print(f'we have logged in as {bot.user}')
 
-@bot.event
-async def on_message(message):
-    if message.author == bot.user:
-        return
-    
-    if message.content.startswith('$hello'):
-        await message.channel.send('Hello!')
-
-bot.run(TOKEN)
+@bot.command(name='hello')
+async def test(ctx):
+    await ctx.send("hello")
 
 #shutdown bot
-@bot.command()
+@bot.command(name='shut')
 @commands.is_owner()
 async def shutdown(ctx):
     exit()
+
+bot.run(TOKEN)
