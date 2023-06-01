@@ -1,7 +1,12 @@
+# Import the os module.
+import os
+# Import load_dotenv function from dotenv module.
+from dotenv import load_dotenv
 import discord
 from discord.ext import commands
 
-TOKEN = 'MTExMzUwMjg4Njk0NTYyMDA4MA.GvyyGP.625SpJYyUXlsSTNhykK_LSq9V4wVQNLD0QU-RA'
+load_dotenv()
+TOKEN = os.getenv('DISCORD_TOKEN')
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -12,7 +17,7 @@ bot = commands.Bot(command_prefix = '$',intents=intents)
 async def on_ready():
     print(f'we have logged in as {bot.user}')
 
-@bot.command(name='hello')
+@bot.command(name='hello',description = 'hello')
 async def test(ctx):
     await ctx.send("hello")
 
