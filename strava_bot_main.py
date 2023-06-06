@@ -4,7 +4,8 @@ import os
 from dotenv import load_dotenv
 import discord
 from discord.ext import commands
-from strava import url
+import strava
+#import pandas
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -27,13 +28,22 @@ async def test(ctx):
 
 #login command: gives user strava auth url (url is from strava.py)
 @bot.command(name='login',description = 'hello')
-async def test(ctx):
+async def login(ctx):
     embed = discord.Embed(
-        title="Connect your Strava account to Fitness Stats Bot",
-        description=f"[Click here]({url}) to connect your account to Fitness Stats Bot",
-        colour=discord.Colour.blue()
+        title="Strava Login",
+        description=f"[Click here]({strava.url}) to connect your strava account to Fitness Stats Bot",
+        colour=discord.Colour.orange()
     )
     await ctx.send(embed=embed)
+
+
+#distweek command: makes a graph from activities showing activity distance split by type and day of week
+@bot.command(name="distweek")
+async def distWeek(ctx):
+    embed = discord.Embed(
+        title=f"{ctx.author.display_name}'s Activity distance By Type and Day of Week"
+    )
+    await ctx.send(embed=embed) 
 
 #shutdown bot
 @bot.command(name='shut')
