@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 import discord
 from discord.ext import commands
+from strava import url
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -19,7 +20,19 @@ async def on_ready():
 
 @bot.command(name='hello',description = 'hello')
 async def test(ctx):
+    embed = embed(
+        
+    )
     await ctx.send("hello")
+
+#login command: gives user strava auth url (url is from strava.py)
+@bot.command(name='login',description = 'hello')
+async def test(ctx):
+    embed = discord.Embed(
+        title="Connect your Strava account to Fitness Stats Bot",
+        description=f"[Click here]({url}) to connect your account to Fitness Stats Bot"
+    )
+    await ctx.send(embed=embed)
 
 #shutdown bot
 @bot.command(name='shut')
