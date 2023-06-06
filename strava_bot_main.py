@@ -30,7 +30,8 @@ async def test(ctx):
 async def test(ctx):
     embed = discord.Embed(
         title="Connect your Strava account to Fitness Stats Bot",
-        description=f"[Click here]({url}) to connect your account to Fitness Stats Bot"
+        description=f"[Click here]({url}) to connect your account to Fitness Stats Bot",
+        colour=discord.Colour.blue()
     )
     await ctx.send(embed=embed)
 
