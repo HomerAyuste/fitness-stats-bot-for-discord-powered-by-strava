@@ -9,6 +9,7 @@ import strava
 import interactions
 
 ORANGE='#FF5733'
+BOTNAME='Fitness Stats Bot'
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -27,11 +28,11 @@ async def test(ctx):
     await ctx.send("hello")
 
 #login command: gives user strava auth url (url is from strava.py)
-@interactions.slash_command(name='login',description = 'hello')
+@interactions.slash_command(name='login',description = f'Gives you a link to connect your Strava account to {BOTNAME}')
 async def login(ctx):
     embed = interactions.Embed(
         title="Strava Login",
-        description=f"[Click here]({strava.url}) to connect your strava account to Fitness Stats Bot",
+        description=f"[Click here]({strava.url}) to connect your strava account to {BOTNAME}",
         color=ORANGE
     )
     await ctx.send(embed=embed)
