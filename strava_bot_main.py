@@ -8,6 +8,8 @@ import strava
 #import pandas
 import interactions
 
+ORANGE='#FF5733'
+
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
@@ -22,18 +24,15 @@ bot = interactions.Client(token=TOKEN)
 
 @interactions.slash_command(name='hello',description = 'hello')
 async def test(ctx):
-    embed = embed(
-        
-    )
     await ctx.send("hello")
 
 #login command: gives user strava auth url (url is from strava.py)
 @interactions.slash_command(name='login',description = 'hello')
 async def login(ctx):
-    embed = discord.Embed(
+    embed = interactions.Embed(
         title="Strava Login",
         description=f"[Click here]({strava.url}) to connect your strava account to Fitness Stats Bot",
-        colour=discord.Colour.orange()
+        color=ORANGE
     )
     await ctx.send(embed=embed)
 
@@ -41,7 +40,7 @@ async def login(ctx):
 #distweek command: makes a graph from activities showing activity distance split by type and day of week
 @interactions.slash_command(name="distweek", description="Display Your Activity distance By Type and Day of Week")
 async def distWeek(ctx):
-    embed = discord.Embed(
+    embed = interactions.Embed(
         title=f"{ctx.author.display_name}'s Activity distance By Type and Day of Week"
     )
     await ctx.send(embed=embed) 
