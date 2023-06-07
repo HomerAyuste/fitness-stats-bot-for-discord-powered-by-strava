@@ -20,7 +20,7 @@ bot = interactions.Client(token=TOKEN)
 # async def on_ready():
 #     print(f'we have logged in as {bot.user}')
 
-@bot.command(name='hello',description = 'hello')
+@interactions.slash_command(name='hello',description = 'hello')
 async def test(ctx):
     embed = embed(
         
@@ -28,7 +28,7 @@ async def test(ctx):
     await ctx.send("hello")
 
 #login command: gives user strava auth url (url is from strava.py)
-@bot.command(name='login',description = 'hello')
+@interactions.slash_command(name='login',description = 'hello')
 async def login(ctx):
     embed = discord.Embed(
         title="Strava Login",
@@ -39,7 +39,7 @@ async def login(ctx):
 
 
 #distweek command: makes a graph from activities showing activity distance split by type and day of week
-@bot.command(name="distweek", description="Display Your Activity distance By Type and Day of Week")
+@interactions.slash_command(name="distweek", description="Display Your Activity distance By Type and Day of Week")
 async def distWeek(ctx):
     embed = discord.Embed(
         title=f"{ctx.author.display_name}'s Activity distance By Type and Day of Week"
