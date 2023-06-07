@@ -3,9 +3,10 @@ import os
 # Import load_dotenv function from dotenv module.
 from dotenv import load_dotenv
 import discord
-from discord.ext import commands
+#from discord.ext import commands
 import strava
 #import pandas
+import interactions
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -13,11 +14,11 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 intents = discord.Intents.default()
 intents.message_content = True
 
-bot = commands.Bot(command_prefix = '$',intents=intents)
+bot = interactions.Client(token=TOKEN)
 
-@bot.event
-async def on_ready():
-    print(f'we have logged in as {bot.user}')
+# @bot.event
+# async def on_ready():
+#     print(f'we have logged in as {bot.user}')
 
 @bot.command(name='hello',description = 'hello')
 async def test(ctx):
@@ -38,17 +39,11 @@ async def login(ctx):
 
 
 #distweek command: makes a graph from activities showing activity distance split by type and day of week
-@bot.command(name="distweek")
+@bot.command(name="distweek", description="Display Your Activity distance By Type and Day of Week")
 async def distWeek(ctx):
     embed = discord.Embed(
         title=f"{ctx.author.display_name}'s Activity distance By Type and Day of Week"
     )
     await ctx.send(embed=embed) 
 
-#shutdown bot
-@bot.command(name='shut')
-@commands.is_owner()
-async def shutdown(ctx):
-    exit()
-
-bot.run(TOKEN)
+bot.start()
