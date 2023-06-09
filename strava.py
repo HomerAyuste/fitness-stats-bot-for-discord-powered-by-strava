@@ -29,8 +29,10 @@ CODE = '9bef5ff06722a041c2f1419fce085b8c1ad4de50'
 #access_token = client.exchange_code_for_token(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, code=CODE)
 
 #save access token locally
-# with open('./access_token.pickle','wb') as f:
-#     pickle.dump(access_token,f)
+
+def save_access_token():
+    with open('./access_token.pickle','wb') as f:
+        pickle.dump(access_token,f)
 
 #retrieve access token locally
 with open('./access_token.pickle', 'rb') as f:
