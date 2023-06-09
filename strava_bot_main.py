@@ -14,6 +14,7 @@ import io
 ORANGE='#FF5733'
 BOTNAME='Fitness Stats Bot'
 POWERED='Powered by Strava'
+AUTH_URL="https://www.strava.com/oauth/authorize?client_id=108504&redirect_uri=http%3A%2F%2F127.0.0.1%3A5000%2Fauthorization&approval_prompt=auto&response_type=code&scope=read_all%2Cprofile%3Aread_all%2Cactivity%3Aread_all"
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -36,7 +37,7 @@ async def test(ctx):
 async def login(ctx):
     embed = interactions.Embed(
         title="Strava Login",
-        description=f"[Click here]({strava.url}) to connect your strava account to {BOTNAME}",
+        description=f"[Click here]({AUTH_URL}) to connect your strava account to {BOTNAME}",
         color=ORANGE
     )
     await ctx.send(embed=embed)
@@ -50,8 +51,8 @@ async def distWeek(ctx):
     )
     embed.set_footer(f'{POWERED}')
 
-    day_of_week_order = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ]
-    g = sns.catplot(x='day_of_week', y='distance_km', kind='strip', data=strava.df, order=day_of_week_order, col='type', height=4, aspect=0.9, palette='pastel')
+    day_of_week_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ]
+    g = sns.catplot(x='day_of_week', y='distance_km', kind='strip', data=strava.df, order=day_of_week_order, col='type', height=4, aspect=1, palette='pastel')
     (g.set_axis_labels("Week day", "Distance (km)")
     .set_titles("Activity type: {col_name}")
     .set_xticklabels(rotation=30))
