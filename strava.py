@@ -17,9 +17,9 @@ client = Client()
 
 #Get URL for user to authenticate
 #TODO: find way to get code (for token) after user authenticates
-url = client.authorization_url(client_id=CLIENT_ID, 
-                               redirect_uri='http://127.0.0.1:5000/authorization',
-                                scope=['read_all','profile:read_all','activity:read_all'])
+# url = client.authorization_url(client_id=CLIENT_ID, 
+#                                redirect_uri='http://127.0.0.1:5000/authorization',
+#                                 scope=['read_all','profile:read_all','activity:read_all'])
 
 #print(url)
 
