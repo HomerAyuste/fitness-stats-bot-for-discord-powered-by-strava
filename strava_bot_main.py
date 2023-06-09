@@ -28,7 +28,7 @@ bot = interactions.Client(token=TOKEN)
 # async def on_ready():
 #     print(f'we have logged in as {bot.user}')
 
-@interactions.slash_command(name='hello',description = 'hello')
+@interactions.slash_command(name='help',description = 'hello')
 async def test(ctx):
     await ctx.send("hello")
 
@@ -37,9 +37,11 @@ async def test(ctx):
 async def login(ctx):
     embed = interactions.Embed(
         title="Strava Login",
-        description=f"[Click here]({AUTH_URL}) to connect your strava account to {BOTNAME}",
+        description=f"[Click here]({AUTH_URL}) to connect your Strava account to {BOTNAME}",
         color=ORANGE
     )
+    embed.set_thumbnail(url='https://headwindapp.com/static/bfea3d9e7b8702e5e583172b5b8e545e/5ebbe/powered-by-strava.png')
+    embed.set_footer(f'{POWERED}',icon_url="https://headwindapp.com/static/bfea3d9e7b8702e5e583172b5b8e545e/5ebbe/powered-by-strava.png")
     await ctx.send(embed=embed)
 
 
