@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 from stravalib import Client
 import pickle
 import time
+import pandas as pd
+#import matplotlib.pyplot
 
 #get client id and secret from .env
 load_dotenv()
@@ -59,3 +61,48 @@ else:
 athlete = client.get_athlete()
 print("Athlete's name is {} {}, based in {}, {}"
       .format(athlete.firstname, athlete.lastname, athlete.city, athlete.country))
+
+#look at activities and create a dataframe
+activities = client.get_activities(limit=1000)
+my_cols =['name',
+          'start_date_local',
+          'type',
+          'distance',
+          'moving_time',
+          'elapsed_time',
+          'total_elevation_gain',
+          'elev_high',
+          'elev_low',
+          'average_speed',
+          'max_speed',
+          'average_heartrate',
+          'max_heartrate',
+          'start_latitude',
+          'start_longitude']
+
+data = []
+for activity in activities:
+    my_dict = activity.to_dict()
+    data.append([activity.id]+[my_dict.get(x) for x in my_cols])
+    
+# Add id to the beginning of the columns, used when selecting a specific activity
+my_cols.insert(0,'id')
+
+df = pd.DataFrame(data, columns=my_cols)
+# Make all walks into hikes for consistency
+df['type'] = df['type'].replace('Walk','Hike')
+# Create a distance in km column
+df['distance_km'] = df['distance']/1e3
+# Convert dates to datetime type
+df['start_date_local'] = pd.to_datetime(df['start_date_local'])
+# Create a day of the week and month of the year columns
+df['day_of_week'] = df['start_date_local'].dt.day_name()
+df['month_of_year'] = df['start_date_local'].dt.month
+# Convert times to timedeltas
+df['moving_time'] = pd.to_timedelta(df['moving_time'])
+df['elapsed_time'] = pd.to_timedelta(df['elapsed_time'])
+# Convert timings to hours for plotting
+# df['elapsed_time_hr'] = df['elapsed_time'].astype(int)/3600e9
+# df['moving_time_hr'] = df['moving_time'].astype(int)/3600e9
+
+# print(df.head())
