@@ -7,9 +7,13 @@ import discord
 import strava
 #import pandas
 import interactions
+import seaborn as sns
+import matplotlib.pyplot as plt
+import io
 
 ORANGE='#FF5733'
 BOTNAME='Fitness Stats Bot'
+POWERED='Powered by Strava'
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -44,6 +48,25 @@ async def distWeek(ctx):
     embed = interactions.Embed(
         title=f"{ctx.author.display_name}'s Activity distance By Type and Day of Week"
     )
-    await ctx.send(embed=embed) 
+    embed.set_footer(f'{POWERED}')
+
+    day_of_week_order = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ]
+    g = sns.catplot(x='day_of_week', y='distance_km', kind='strip', data=strava.df, order=day_of_week_order, col='type', height=4, aspect=0.9, palette='pastel')
+    (g.set_axis_labels("Week day", "Distance (km)")
+    .set_titles("Activity type: {col_name}")
+    .set_xticklabels(rotation=30))
+    g.fig.subplots_adjust(top=.8)
+    g.fig.suptitle(f"{ctx.author.display_name}'s Activity distance By Type and Day of Week")
+    data_stream = io.BytesIO()
+    plt.savefig(data_stream,format='png')
+    plt.close()
+    data_stream.seek(0)
+    image = interactions.File(data_stream, file_name='graph.png')
+    embed.set_image(url='attachment://graph.png')
+    # await ctx.send(file=image, embed=embed)
+
+    await ctx.send(embed=embed,file=image) 
+
+#TODO: make it so that other users can see another user's stats with commands
 
 bot.start()
