@@ -42,15 +42,20 @@ async def login(ctx):
     )
     embed.set_thumbnail(url='https://headwindapp.com/static/bfea3d9e7b8702e5e583172b5b8e545e/5ebbe/powered-by-strava.png')
     embed.set_footer(f'{POWERED}',icon_url="https://headwindapp.com/static/bfea3d9e7b8702e5e583172b5b8e545e/5ebbe/powered-by-strava.png")
+    #embed.set_image() #TODO: add connect to strava image
     await ctx.send(embed=embed)
 
 
 #distweek command: makes a graph from activities showing activity distance split by type and day of week
 @interactions.slash_command(name="distweek", description="Display Your Activity distance By Type and Day of Week")
-async def distWeek(ctx):
+@interactions.slash_option(name='user', description='The user to show (default self)', opt_type=interactions.OptionType.USER)
+async def distWeek(ctx, user=None):
+    if(user == None):
+        user = ctx.author
     embed = interactions.Embed(
-        title=f"{ctx.author.display_name}'s Activity distance By Type and Day of Week"
+        title=f"{user.display_name}'s Activity distance By Type and Day of Week"
     )
+    embed.set_thumbnail(url='https://headwindapp.com/static/bfea3d9e7b8702e5e583172b5b8e545e/5ebbe/powered-by-strava.png')
     embed.set_footer(f'{POWERED}')
 
     day_of_week_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ]
@@ -59,7 +64,7 @@ async def distWeek(ctx):
     .set_titles("Activity type: {col_name}")
     .set_xticklabels(rotation=30))
     g.fig.subplots_adjust(top=.8)
-    g.fig.suptitle(f"{ctx.author.display_name}'s Activity distance By Type and Day of Week")
+    g.fig.suptitle(f"{user.display_name}'s Activity distance By Type and Day of Week")
     data_stream = io.BytesIO()
     plt.savefig(data_stream,format='png')
     plt.close()
