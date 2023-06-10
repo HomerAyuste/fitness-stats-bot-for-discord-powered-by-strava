@@ -11,7 +11,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import io
 
-ORANGE='#FF5733'
+ORANGE='#FC4C02'
 BOTNAME='Fitness Stats Bot'
 POWERED='Powered by Strava'
 AUTH_URL="https://www.strava.com/oauth/authorize?client_id=108504&redirect_uri=http%3A%2F%2F127.0.0.1%3A5000%2Fauthorization&approval_prompt=auto&response_type=code&scope=read_all%2Cprofile%3Aread_all%2Cactivity%3Aread_all"
@@ -45,6 +45,7 @@ async def login(ctx):
     #embed.set_image() #TODO: add connect to strava image
     await ctx.send(embed=embed)
 
+@login.subcommand()
 
 #distweek command: makes a graph from activities showing activity distance split by type and day of week
 @interactions.slash_command(name="distweek", description="Display Your Activity distance By Type and Day of Week")
@@ -61,7 +62,8 @@ async def distWeek(ctx, user=None, activities=''):
         user = ctx.author
     title = f"{user.display_name}'s Activity Distance By Type and Day of Week" if activities=='' else f"{user.display_name}'s {activities} Distance by Day of the Week"
     embed = interactions.Embed(
-        title=title
+        title=title,
+        color=ORANGE
     )
     embed.set_thumbnail(url='https://headwindapp.com/static/bfea3d9e7b8702e5e583172b5b8e545e/5ebbe/powered-by-strava.png')
     embed.set_footer(f'{POWERED}',icon_url="https://headwindapp.com/static/bfea3d9e7b8702e5e583172b5b8e545e/5ebbe/powered-by-strava.png")
@@ -88,6 +90,53 @@ async def distWeek(ctx, user=None, activities=''):
 
     await ctx.send(embed=embed,file=image) 
 
-#TODO: make it so that other users can see another user's stats with commands
+#recap command: attempts to recreate Strava's monthly/yearly recap
+@interactions.slash_command(name="recap", description="Display Your Activity Recap for any year or all time recap")
+@interactions.slash_option(name='user', description='The user to show (default self)', opt_type=interactions.OptionType.USER)
+@interactions.slash_option(name='activities', description='One activity to show (defaults to show all)',
+                        opt_type=interactions.OptionType.STRING,
+                        choices=[
+                            interactions.SlashCommandChoice(name='Ride',value='Ride'),
+                            interactions.SlashCommandChoice(name='Hike',value='Hike'),
+                            interactions.SlashCommandChoice(name='E-Bike Ride',value='EBikeRide')
+                           ])
+@interactions.slash_option(name='time_period', description='Time period to show (defaults to show all time)',
+                        opt_type=interactions.OptionType.STRING,
+                        # choices=[
+                        #     interactions.SlashCommandChoice(name='2023',value='2023'),
+                        #     interactions.SlashCommandChoice(name='2022',value='2022'),
+                        #     interactions.SlashCommandChoice(name='2021',value='2021'),
+                        #     interactions.SlashCommandChoice(name='2020',value='2020')
+                        #    ],
+                           autocomplete=True)
+async def recap(ctx, user=None,activities='',time_period='All time'):
+    if(user == None):
+        user = ctx.author
+    title = f'{user.display_name}\'s {time_period} Recap'
+    embed = interactions.Embed(
+        title=title,
+        color = ORANGE
+    )
+    embed.set_thumbnail(url='https://headwindapp.com/static/bfea3d9e7b8702e5e583172b5b8e545e/5ebbe/powered-by-strava.png')
+    embed.set_footer(f'{POWERED}',icon_url="https://headwindapp.com/static/bfea3d9e7b8702e5e583172b5b8e545e/5ebbe/powered-by-strava.png")
+
+    await ctx.send(embed=embed) 
+
+@recap.autocomplete('time_period')
+async def recap_autocomplete(self,ctx):
+    await ctx.send(
+        choices=[
+            {
+                "name": f'{ctx.input_text}22',
+                'value': f'{ctx.input_text}22'
+            },
+            {
+                "name": f'{ctx.input_text}23',
+                'value': f'{ctx.input_text}23'               
+            }
+        ]
+    )
+
+
 
 bot.start()
