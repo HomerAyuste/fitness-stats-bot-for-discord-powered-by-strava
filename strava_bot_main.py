@@ -49,23 +49,36 @@ async def login(ctx):
 #distweek command: makes a graph from activities showing activity distance split by type and day of week
 @interactions.slash_command(name="distweek", description="Display Your Activity distance By Type and Day of Week")
 @interactions.slash_option(name='user', description='The user to show (default self)', opt_type=interactions.OptionType.USER)
-async def distWeek(ctx, user=None):
+@interactions.slash_option(name='activities', description='Activities to show (defaults to show all)',
+                        opt_type=interactions.OptionType.STRING,
+                        choices=[
+                            interactions.SlashCommandChoice(name='Ride',value='Ride'),
+                            interactions.SlashCommandChoice(name='Hike',value='Hike'),
+                            interactions.SlashCommandChoice(name='E-Bike Ride',value='EBikeRide')
+                           ])
+async def distWeek(ctx, user=None, activities=''):
     if(user == None):
         user = ctx.author
+    title = f"{user.display_name}'s Activity Distance By Type and Day of Week" if activities=='' else f"{user.display_name}'s {activities} Distance by Day of the Week"
     embed = interactions.Embed(
-        title=f"{user.display_name}'s Activity distance By Type and Day of Week"
+        title=title
     )
     embed.set_thumbnail(url='https://headwindapp.com/static/bfea3d9e7b8702e5e583172b5b8e545e/5ebbe/powered-by-strava.png')
-    embed.set_footer(f'{POWERED}')
+    embed.set_footer(f'{POWERED}',icon_url="https://headwindapp.com/static/bfea3d9e7b8702e5e583172b5b8e545e/5ebbe/powered-by-strava.png")
 
     day_of_week_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ]
-    g = sns.catplot(x='day_of_week', y='distance_km', kind='strip', data=strava.df, order=day_of_week_order, col='type', height=4, aspect=1, palette='pastel')
+    g = sns.catplot(x='day_of_week', y='distance_km', kind='strip',
+                    data=strava.df if activities=='' else strava.df.loc[strava.df['type']==activities],
+                    order=day_of_week_order, col='type', height=5, aspect=1, palette='pastel')
     (g.set_axis_labels("Week day", "Distance (km)")
     .set_titles("Activity type: {col_name}")
     .set_xticklabels(rotation=30))
-    g.fig.subplots_adjust(top=.8)
-    g.fig.suptitle(f"{user.display_name}'s Activity distance By Type and Day of Week")
+    g.fig.subplots_adjust(top=.9)
+    g.fig.suptitle(title)
+
+    #save image in data stream
     data_stream = io.BytesIO()
+    #plt.figure(figsize=(10,6))
     plt.savefig(data_stream,format='png')
     plt.close()
     data_stream.seek(0)
