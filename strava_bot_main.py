@@ -15,7 +15,7 @@ ORANGE='#FC4C02'
 BOTNAME='Fitness Stats Bot'
 POWERED='Powered by Strava'
 AUTH_URL="https://www.strava.com/oauth/authorize?client_id=108504&redirect_uri=http%3A%2F%2F127.0.0.1%3A5000%2Fauthorization&approval_prompt=auto&response_type=code&scope=read_all%2Cprofile%3Aread_all%2Cactivity%3Aread_all"
-
+POWERED_IMG = interactions.File('api_logo_pwrdBy_strava_stack_light.png',file_name='powered.png')
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
@@ -33,19 +33,41 @@ async def test(ctx):
     await ctx.send("hello")
 
 #login command: gives user strava auth url (url is from strava.py)
-@interactions.slash_command(name='login',description = f'Gives you a link to connect your Strava account to {BOTNAME}')
+@interactions.slash_command(name='login',description = f'Gives you a link to connect your Strava account to {BOTNAME}',
+                            sub_cmd_name='link', sub_cmd_description=f'Gives you a link to connect your Strava account to {BOTNAME}')
 async def login(ctx):
     embed = interactions.Embed(
         title="Strava Login",
         description=f"[Click here]({AUTH_URL}) to connect your Strava account to {BOTNAME}",
         color=ORANGE
     )
-    embed.set_thumbnail(url='https://headwindapp.com/static/bfea3d9e7b8702e5e583172b5b8e545e/5ebbe/powered-by-strava.png')
-    embed.set_footer(f'{POWERED}',icon_url="https://headwindapp.com/static/bfea3d9e7b8702e5e583172b5b8e545e/5ebbe/powered-by-strava.png")
-    #embed.set_image() #TODO: add connect to strava image
-    await ctx.send(embed=embed)
 
-@login.subcommand()
+    embed.set_thumbnail(url='attachment://powered.png')
+    embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
+    #embed.set_image() #TODO: add connect to strava image
+    await ctx.send(embed=embed, file=POWERED_IMG)
+
+@login.subcommand(sub_cmd_name='enter_code', sub_cmd_description='Enter code from localhost')
+@interactions.slash_option(name='code', description='Enter code from localhost here', opt_type=interactions.OptionType.STRING)
+async def enter_code(ctx,code=''):
+    try:
+        access_token = strava.get_access_token(code)
+        embed = interactions.Embed(
+            title="Strava Login",
+            description=f"Success! Here is your access token: {access_token}",
+            color=ORANGE
+        )
+        embed.set_thumbnail(url='attachment://powered.png')
+        embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
+        await ctx.send(embed=embed, file=POWERED_IMG)
+    except:
+        embed = interactions.Embed(
+            title="Strava Login",
+            description="Error! Code did not work",
+            color=ORANGE
+        )
+        await ctx.send(embed = embed)
+
 
 #distweek command: makes a graph from activities showing activity distance split by type and day of week
 @interactions.slash_command(name="distweek", description="Display Your Activity distance By Type and Day of Week")
@@ -65,9 +87,7 @@ async def distWeek(ctx, user=None, activities=''):
         title=title,
         color=ORANGE
     )
-    embed.set_thumbnail(url='https://headwindapp.com/static/bfea3d9e7b8702e5e583172b5b8e545e/5ebbe/powered-by-strava.png')
-    embed.set_footer(f'{POWERED}',icon_url="https://headwindapp.com/static/bfea3d9e7b8702e5e583172b5b8e545e/5ebbe/powered-by-strava.png")
-
+    
     day_of_week_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ]
     g = sns.catplot(x='day_of_week', y='distance_km', kind='strip',
                     data=strava.df if activities=='' else strava.df.loc[strava.df['type']==activities],
@@ -86,9 +106,10 @@ async def distWeek(ctx, user=None, activities=''):
     data_stream.seek(0)
     image = interactions.File(data_stream, file_name='graph.png')
     embed.set_image(url='attachment://graph.png')
-    # await ctx.send(file=image, embed=embed)
-
-    await ctx.send(embed=embed,file=image) 
+    embed.set_thumbnail(url='attachment://powered.png')
+    embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
+    #embed.set_image() #TODO: add connect to strava image
+    await ctx.send(embed=embed, files=[POWERED_IMG,image])
 
 #recap command: attempts to recreate Strava's monthly/yearly recap
 @interactions.slash_command(name="recap", description="Display Your Activity Recap for any year or all time recap")
@@ -123,16 +144,16 @@ async def recap(ctx, user=None,activities='',time_period='All time'):
     await ctx.send(embed=embed) 
 
 @recap.autocomplete('time_period')
-async def recap_autocomplete(self,ctx):
+async def recap_autocomplete(ctx):
     await ctx.send(
         choices=[
             {
-                "name": f'{ctx.input_text}22',
-                'value': f'{ctx.input_text}22'
+                "name": f'{ctx.input_text}022',
+                'value': f'{ctx.input_text}022'
             },
             {
-                "name": f'{ctx.input_text}23',
-                'value': f'{ctx.input_text}23'               
+                "name": f'{ctx.input_text}023',
+                'value': f'{ctx.input_text}023'               
             }
         ]
     )
