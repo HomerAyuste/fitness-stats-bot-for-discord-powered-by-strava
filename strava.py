@@ -26,10 +26,12 @@ client = Client()
 #Get access code by exchanging with auth code (access code lasts for 6hrs)
 #access code is saved locally for now
 CODE = '9bef5ff06722a041c2f1419fce085b8c1ad4de50'
-#access_token = client.exchange_code_for_token(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, code=CODE)
+
+def get_access_token(code):
+    access_token = client.exchange_code_for_token(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, code=code)
+    return access_token
 
 #save access token locally
-
 def save_access_token():
     with open('./access_token.pickle','wb') as f:
         pickle.dump(access_token,f)
@@ -100,6 +102,7 @@ df['start_date_local'] = pd.to_datetime(df['start_date_local'])
 # Create a day of the week and month of the year columns
 df['day_of_week'] = df['start_date_local'].dt.day_name()
 df['month_of_year'] = df['start_date_local'].dt.month
+df['year'] = df['start_date_local'].dt.year
 # Convert times to timedeltas
 df['moving_time'] = pd.to_timedelta(df['moving_time'])
 df['elapsed_time'] = pd.to_timedelta(df['elapsed_time'])
