@@ -5,7 +5,9 @@ import io
 from interactions import File
 
 def recap(df):
-    df1 = df.groupby(df['year'])['moving_time'].sum()
+    # df['month_and_year'] = df['month_of_year'].map(str) + '-' + df['year'].map(str)
+    # df['month_and_year'] = pd.to_datetime(df['month_and_year'],format='%m-%Y')
+    df1 = df.groupby(df['year'].values)['moving_time_hr'].sum()
     df1.plot(kind='bar')
     #save image in data stream
     data_stream = io.BytesIO()
