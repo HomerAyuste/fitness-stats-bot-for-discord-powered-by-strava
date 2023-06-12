@@ -15,6 +15,7 @@ CLIENT_ID = os.getenv('STRAVA_CLIENT_ID')
 
 client = Client()
 
+
 #Get URL for user to authenticate
 #TODO: find way to get code (for token) after user authenticates
 # url = client.authorization_url(client_id=CLIENT_ID, 
@@ -67,7 +68,7 @@ print("Athlete's name is {} {}, based in {}, {}"
       .format(athlete.firstname, athlete.lastname, athlete.city, athlete.country))
 
 #look at activities and create a dataframe
-activities = client.get_activities(limit=1000)
+activities = client.get_activities()
 my_cols =['name',
           'start_date_local',
           'type',
@@ -107,7 +108,7 @@ df['year'] = df['start_date_local'].dt.year
 df['moving_time'] = pd.to_timedelta(df['moving_time'])
 df['elapsed_time'] = pd.to_timedelta(df['elapsed_time'])
 # Convert timings to hours for plotting
-# df['elapsed_time_hr'] = df['elapsed_time'].astype(int)/3600e9
-# df['moving_time_hr'] = df['moving_time'].astype(int)/3600e9
+df['elapsed_time_hr'] = df['elapsed_time'].astype(int)/3600e9
+df['moving_time_hr'] = df['moving_time'].astype(int)/3600e9
 
 # print(df.head())
