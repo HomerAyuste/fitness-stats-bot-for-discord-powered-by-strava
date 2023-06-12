@@ -2,7 +2,7 @@
 import os
 # Import load_dotenv function from dotenv module.
 from dotenv import load_dotenv
-import discord
+from discord import Intents
 #from discord.ext import commands
 import strava
 #import pandas
@@ -10,16 +10,19 @@ import interactions
 import seaborn as sns
 import matplotlib.pyplot as plt
 import io
+import graphs_and_stats as graphs
 
 ORANGE='#FC4C02'
 BOTNAME='Fitness Stats Bot'
 POWERED='Powered by Strava'
 AUTH_URL="https://www.strava.com/oauth/authorize?client_id=108504&redirect_uri=http%3A%2F%2F127.0.0.1%3A5000%2Fauthorization&approval_prompt=auto&response_type=code&scope=read_all%2Cprofile%3Aread_all%2Cactivity%3Aread_all"
 POWERED_IMG = interactions.File('api_logo_pwrdBy_strava_stack_light.png',file_name='powered.png')
+CONNECT_IMG = interactions.File('btn_strava_connectwith_orange.png', file_name='connect.png')
+
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-intents = discord.Intents.default()
+intents = Intents.default()
 intents.message_content = True
 
 bot = interactions.Client(token=TOKEN)
@@ -44,8 +47,9 @@ async def login(ctx):
 
     embed.set_thumbnail(url='attachment://powered.png')
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
+    embed.set_image('attachment://connect.png')
     #embed.set_image() #TODO: add connect to strava image
-    await ctx.send(embed=embed, file=POWERED_IMG)
+    await ctx.send(embed=embed, files=[POWERED_IMG,CONNECT_IMG])
 
 @login.subcommand(sub_cmd_name='enter_code', sub_cmd_description='Enter code from localhost')
 @interactions.slash_option(name='code', description='Enter code from localhost here', opt_type=interactions.OptionType.STRING)
@@ -108,7 +112,6 @@ async def distWeek(ctx, user=None, activities=''):
     embed.set_image(url='attachment://graph.png')
     embed.set_thumbnail(url='attachment://powered.png')
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
-    #embed.set_image() #TODO: add connect to strava image
     await ctx.send(embed=embed, files=[POWERED_IMG,image])
 
 #recap command: attempts to recreate Strava's monthly/yearly recap
@@ -138,10 +141,11 @@ async def recap(ctx, user=None,activities='',time_period='All time'):
         title=title,
         color = ORANGE
     )
-    embed.set_thumbnail(url='https://headwindapp.com/static/bfea3d9e7b8702e5e583172b5b8e545e/5ebbe/powered-by-strava.png')
-    embed.set_footer(f'{POWERED}',icon_url="https://headwindapp.com/static/bfea3d9e7b8702e5e583172b5b8e545e/5ebbe/powered-by-strava.png")
-
-    await ctx.send(embed=embed) 
+    image = graphs.recap(strava.df)
+    embed.set_image(url='attachment://graph.png')
+    embed.set_thumbnail(url='attachment://powered.png')
+    embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
+    await ctx.send(embed=embed, files=[POWERED_IMG,image])
 
 @recap.autocomplete('time_period')
 async def recap_autocomplete(ctx):
@@ -157,7 +161,6 @@ async def recap_autocomplete(ctx):
             }
         ]
     )
-
 
 
 bot.start()
