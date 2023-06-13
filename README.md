@@ -1,7 +1,6 @@
-# strava_bot
-Fitness Stats Bot for Discord (Powered by Strava)
+# Fitness Stats Bot for Discord (Powered by Strava)
 
-This is still a work in progress.
+**This is still a work in progress.**
 
 This Discord Bot provides fitness stats for you using Strava and sends embedded Discord messages with stats and graphs.
 
