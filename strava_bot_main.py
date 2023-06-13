@@ -48,7 +48,6 @@ async def login(ctx):
     embed.set_thumbnail(url='attachment://powered.png')
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
     embed.set_image('attachment://connect.png')
-    #embed.set_image() #TODO: add connect to strava image
     await ctx.send(embed=embed, files=[POWERED_IMG,CONNECT_IMG])
 
 @login.subcommand(sub_cmd_name='enter_code', sub_cmd_description='Enter code from localhost')
@@ -133,7 +132,13 @@ async def distWeek(ctx, user=None, activities=''):
                         #     interactions.SlashCommandChoice(name='2020',value='2020')
                         #    ],
                            autocomplete=True)
-async def recap(ctx, user=None,activities='',time_period='All time'):
+@interactions.slash_option(name='recap_type', description='What metric to recap (defaults to time)',
+                        opt_type=interactions.OptionType.STRING,
+                        choices=[
+                            interactions.SlashCommandChoice(name='Hour',value='moving_time_hr'),
+                            interactions.SlashCommandChoice(name='Distance',value='distance')
+                           ])
+async def recap(ctx, user=None,activities='',time_period='All time',recap_type='moving_time_hr'):
     if(user == None):
         user = ctx.author
     title = f'{user.display_name}\'s {time_period} Recap'
@@ -141,7 +146,7 @@ async def recap(ctx, user=None,activities='',time_period='All time'):
         title=title,
         color = ORANGE
     )
-    image = graphs.recap(strava.df)
+    image = graphs.recap(strava.df, title,y_column=recap_type)
     embed.set_image(url='attachment://graph.png')
     embed.set_thumbnail(url='attachment://powered.png')
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
