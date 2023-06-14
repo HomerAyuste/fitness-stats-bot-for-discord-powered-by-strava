@@ -47,7 +47,7 @@ async def login(ctx):
     embed.set_thumbnail(url='attachment://powered.png')
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
     embed.set_image('attachment://connect.png')
-    await ctx.send(embed=embed, files=[POWERED_IMG,CONNECT_IMG])
+    await ctx.send(embed=embed, files=[POWERED_IMG,CONNECT_IMG], ephemeral = True)
 
 @login.subcommand(sub_cmd_name='enter_code', sub_cmd_description='Enter code from localhost')
 @interactions.slash_option(name='code', description='Enter code from localhost here', opt_type=interactions.OptionType.STRING)
@@ -61,7 +61,7 @@ async def enter_code(ctx,code=''):
         )
         embed.set_thumbnail(url='attachment://powered.png')
         embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
-        await ctx.send(embed=embed, file=POWERED_IMG)
+        await ctx.send(embed=embed, file=POWERED_IMG, ephemeral = True)
     except:
         embed = interactions.Embed(
             title="Strava Login",
@@ -70,7 +70,7 @@ async def enter_code(ctx,code=''):
         )
         await ctx.send(embed = embed)
     
-@login.subcommand(sub_cmd_name='disconnect', sub_cmd_description='Disconnect your strava account from Fitness Stats Bot')
+@login.subcommand(sub_cmd_name='disconnect', sub_cmd_description=f'Disconnect your strava account from {BOTNAME}')
 async def disconnect(ctx):
     components: list[interactions.ActionRow] = interactions.spread_to_rows(
         interactions.Button(
@@ -83,18 +83,30 @@ async def disconnect(ctx):
             label='No',
             style=interactions.ButtonStyle.RED
         )
+    )    
+    embed = interactions.Embed(
+        title="Disconnect From the Bot",
+        description=f"Are you sure you want to disconnect your\n Strava account from {BOTNAME}?",
+        color=ORANGE
     )
-    await ctx.send('Look a button!',components=components)
+    message = await ctx.send(embed=embed,components=components, ephemeral=True)
+    message
     try:
         # you need to pass the component you want to listen for here
         # you can also pass an ActionRow, or a list of ActionRows. Then a press on any component in there will be listened for
         button = await bot.wait_for_component(components=components, timeout=30)
         if button.ctx.custom_id == 'yes':
-            print('ok')
+            embed.description='Never mind'
+            await message.edit(embed = embed,components=None)
         else:
-            print('no')
+            embed.description='Never mind'
+            await message.edit(embed=embed, components=None)
     except TimeoutError:
-        print("Timed Out!")
+        embed = interactions.Embed(
+            description='Disconnect option expired. Re-run the command to try again',
+            color=ORANGE
+        )
+        await message.edit(embed=embed)
 
 
 #distweek command: makes a graph from activities showing activity distance split by type and day of week
