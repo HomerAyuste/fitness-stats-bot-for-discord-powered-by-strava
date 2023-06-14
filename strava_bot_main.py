@@ -89,24 +89,27 @@ async def disconnect(ctx):
         description=f"Are you sure you want to disconnect your\n Strava account from {BOTNAME}?",
         color=ORANGE
     )
-    message = await ctx.send(embed=embed,components=components, ephemeral=False)
+    timeout = 30
+    message = await ctx.send(embed=embed,components=components, ephemeral=True, delete_after=timeout)
     message
+
     try:
-        # you need to pass the component you want to listen for here
-        # you can also pass an ActionRow, or a list of ActionRows. Then a press on any component in there will be listened for
-        button = await bot.wait_for_component(components=components, timeout=30)
+        button = await bot.wait_for_component(components=components, timeout=timeout)
+        #await message.delete(context=message)
         if button.ctx.custom_id == 'yes':
-            embed.description='Ok'
-            await message.edit(embed = embed,components=[])
+            embed.title='Successfully Disconnected!'
+            embed.description=f'You are now disconnected from {BOTNAME}'
+            await ctx.send(embed = embed, ephemeral=True)
         else:
             embed.description='Never mind'
-            await message.edit(embed=embed, components=[])
+            await ctx.send(embed=embed, ephemeral=True)
     except TimeoutError:
         embed = interactions.Embed(
             description='Disconnect option expired. Re-run the command to try again',
             color=ORANGE
         )
-        await message.edit(embed=embed)
+        message.edit(components=[])
+        await ctx.send(embed=embed,ephemeral=True)
 
 
 #distweek command: makes a graph from activities showing activity distance split by type and day of week
