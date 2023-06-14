@@ -2,7 +2,7 @@
 import os
 # Import load_dotenv function from dotenv module.
 from dotenv import load_dotenv
-from discord import Intents
+#from discord import Intents
 #from discord.ext import commands
 import strava
 #import pandas
@@ -22,10 +22,9 @@ CONNECT_IMG = interactions.File('btn_strava_connectwith_orange.png', file_name='
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-intents = Intents.default()
-intents.message_content = True
+intents = interactions.Intents.DEFAULT
 
-bot = interactions.Client(token=TOKEN)
+bot = interactions.Client(token=TOKEN, intents=intents)
 
 # @bot.event
 # async def on_ready():
@@ -70,6 +69,32 @@ async def enter_code(ctx,code=''):
             color=ORANGE
         )
         await ctx.send(embed = embed)
+    
+@login.subcommand(sub_cmd_name='disconnect', sub_cmd_description='Disconnect your strava account from Fitness Stats Bot')
+async def disconnect(ctx):
+    components: list[interactions.ActionRow] = interactions.spread_to_rows(
+        interactions.Button(
+            custom_id='yes',
+            label='Yes',
+            style=interactions.ButtonStyle.GREEN
+        ),
+        interactions.Button(
+            custom_id='no',
+            label='No',
+            style=interactions.ButtonStyle.RED
+        )
+    )
+    await ctx.send('Look a button!',components=components)
+    try:
+        # you need to pass the component you want to listen for here
+        # you can also pass an ActionRow, or a list of ActionRows. Then a press on any component in there will be listened for
+        button = await bot.wait_for_component(components=components, timeout=30)
+        if button.ctx.custom_id == 'yes':
+            print('ok')
+        else:
+            print('no')
+    except TimeoutError:
+        print("Timed Out!")
 
 
 #distweek command: makes a graph from activities showing activity distance split by type and day of week
