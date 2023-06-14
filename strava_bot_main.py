@@ -90,24 +90,7 @@ async def distWeek(ctx, user=None, activities=''):
         title=title,
         color=ORANGE
     )
-    
-    day_of_week_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ]
-    g = sns.catplot(x='day_of_week', y='distance_km', kind='strip',
-                    data=strava.df if activities=='' else strava.df.loc[strava.df['type']==activities],
-                    order=day_of_week_order, col='type', height=5, aspect=1, palette='pastel')
-    (g.set_axis_labels("Week day", "Distance (km)")
-    .set_titles("Activity type: {col_name}")
-    .set_xticklabels(rotation=30))
-    g.fig.subplots_adjust(top=.9)
-    g.fig.suptitle(title)
-
-    #save image in data stream
-    data_stream = io.BytesIO()
-    #plt.figure(figsize=(10,6))
-    plt.savefig(data_stream,format='png')
-    plt.close()
-    data_stream.seek(0)
-    image = interactions.File(data_stream, file_name='graph.png')
+    image = graphs.distweek(strava.df,activities,title)
     embed.set_image(url='attachment://graph.png')
     embed.set_thumbnail(url='attachment://powered.png')
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
@@ -166,6 +149,5 @@ async def recap_autocomplete(ctx):
             }
         ]
     )
-
 
 bot.start()
