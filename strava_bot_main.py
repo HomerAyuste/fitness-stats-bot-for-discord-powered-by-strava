@@ -121,7 +121,13 @@ async def distWeek(ctx, user=None, activities=''):
                             interactions.SlashCommandChoice(name='Hour',value='moving_time_hr'),
                             interactions.SlashCommandChoice(name='Distance',value='distance')
                            ])
-async def recap(ctx, user=None,activities='',time_period='All time',recap_type='moving_time_hr'):
+@interactions.slash_option(name='interval_type', description='What interval to use (defaults to monthly)',
+                        opt_type=interactions.OptionType.STRING,
+                        choices=[
+                            interactions.SlashCommandChoice(name='Monthly',value='month_and_year'),
+                            interactions.SlashCommandChoice(name='Yearly',value='year')
+                           ])
+async def recap(ctx, user=None,activities='',time_period='All time',recap_type='moving_time_hr',interval_type='month_and_year'):
     if(user == None):
         user = ctx.author
     title = f'{user.display_name}\'s {time_period} Recap'
