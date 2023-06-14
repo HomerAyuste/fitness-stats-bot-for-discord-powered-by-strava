@@ -68,7 +68,7 @@ async def enter_code(ctx,code=''):
             description="Error! Code did not work",
             color=ORANGE
         )
-        await ctx.send(embed = embed)
+        await ctx.send(embed = embed,ephemeral=True)
     
 @login.subcommand(sub_cmd_name='disconnect', sub_cmd_description=f'Disconnect your strava account from {BOTNAME}')
 async def disconnect(ctx):
@@ -89,18 +89,18 @@ async def disconnect(ctx):
         description=f"Are you sure you want to disconnect your\n Strava account from {BOTNAME}?",
         color=ORANGE
     )
-    message = await ctx.send(embed=embed,components=components, ephemeral=True)
+    message = await ctx.send(embed=embed,components=components, ephemeral=False)
     message
     try:
         # you need to pass the component you want to listen for here
         # you can also pass an ActionRow, or a list of ActionRows. Then a press on any component in there will be listened for
         button = await bot.wait_for_component(components=components, timeout=30)
         if button.ctx.custom_id == 'yes':
-            embed.description='Never mind'
-            await message.edit(embed = embed,components=None)
+            embed.description='Ok'
+            await message.edit(embed = embed,components=[])
         else:
             embed.description='Never mind'
-            await message.edit(embed=embed, components=None)
+            await message.edit(embed=embed, components=[])
     except TimeoutError:
         embed = interactions.Embed(
             description='Disconnect option expired. Re-run the command to try again',
