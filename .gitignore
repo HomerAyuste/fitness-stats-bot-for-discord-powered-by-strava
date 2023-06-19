@@ -3,3 +3,4 @@
 __pycache__/strava.cpython-311.pyc
 access_token.pickle
 *.pyc
+*.db
