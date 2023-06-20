@@ -9,6 +9,8 @@ if(cur.execute(f"SELECT name FROM sqlite_master WHERE name='{TABLE}'").fetchone(
                 (user_id TEXT NOT NULL PRIMARY KEY,
                 auth_code TEXT,
                 access_token TEXT,
+                refresh_token TEXT,
+                expires_at TEXT,
                 UNIQUE(user_id,auth_code))""")
 con.close()
 
@@ -20,12 +22,16 @@ def insert_val(user_id,auth_code,access_token):
         cur.commit()
     cur.execute(f"INSERT INTO {TABLE} VALUES(?,?,?)",(user_id,auth_code,access_token,))
     con.commit()
+    print("successful insert!")
     con.close()
 
-def fetch_access_token(user_id):
-    con = sqlite3.connect("strava_bot.db")
-    cur = con.cursor()
-    res = cur.execute(f"SELECT access_token FROM {TABLE} WHERE user_id='?'", (user_id,))
-    access_token = res.fetchone()
-    con.close()
-    return access_token
+def fetch_access_tokens(user_id):
+    try:
+        con = sqlite3.connect("strava_bot.db")
+        cur = con.cursor()
+        res = cur.execute(f"SELECT access_token, refresh_token, expires_at FROM {TABLE} WHERE user_id='?'", (user_id,))
+        access_token, refresh_token, expires_at = res.fetchone()
+        con.close()
+        return access_token, refresh_token, expires_at
+    except:
+        return None
