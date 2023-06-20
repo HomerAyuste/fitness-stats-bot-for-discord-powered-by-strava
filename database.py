@@ -35,3 +35,11 @@ def fetch_access_tokens(user_id):
         return access_token, refresh_token, expires_at
     except:
         return None
+
+def update_tokens(user_id,access_token,refresh_token,expires_at):
+    con = sqlite3.connect("strava_bot.db")
+    cur = con.cursor()
+    cur.execute(f'UPDATE {TABLE} SET access_token=?, refresh_token=?,expires_at=? WHERE user_id=?',
+                (access_token,refresh_token,expires_at,user_id))
+    con.commit()
+    con.close()
