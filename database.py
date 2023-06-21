@@ -17,7 +17,7 @@ con.close()
 def insert_val(user_id,auth_code,access_token,refresh_tok,expires_at):
     con = sqlite3.connect("strava_bot.db")
     cur = con.cursor()
-    if(not(cur.execute(f"SELECT * FROM {TABLE} WHERE user_id=?",(user_id,)).fetchall() is None)):
+    if(not(cur.execute(f"SELECT * FROM {TABLE} WHERE user_id=?",(user_id,)).fetchone() is None)):
         cur.execute(f"DELETE FROM {TABLE} WHERE user_id=?", (user_id,))
         con.commit()
     cur.execute(f"INSERT INTO {TABLE} VALUES(?,?,?,?,?)",(user_id,auth_code,access_token,refresh_tok,expires_at,))
