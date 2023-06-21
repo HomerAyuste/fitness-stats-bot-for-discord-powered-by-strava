@@ -29,9 +29,9 @@ client = Client()
 #Get access code by exchanging with auth code (access code lasts for 6hrs)
 #access code is saved locally for now
 
-def get_access_token(code):
+def get_access_tokens(user_id,code):
     access_token = client.exchange_code_for_token(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, code=code)
-    return access_token
+    database.insert_val(user_id,code,access_token['access_token'],access_token['refresh_token'],access_token['expires_at'])
 
 #save access token locally
 def save_access_token():
