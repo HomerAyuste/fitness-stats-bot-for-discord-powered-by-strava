@@ -46,7 +46,7 @@ async def login(ctx):
 @interactions.slash_option(name='code', description='Enter code from localhost here', opt_type=interactions.OptionType.STRING)
 async def enter_code(ctx,code=''):
     try:
-        strava.get_access_tokens(code)
+        strava.get_access_tokens(ctx.author.username,code)
         embed = interactions.Embed(
             title="Strava Login",
             description=f"Success! You're logged in now!",
@@ -88,7 +88,7 @@ async def disconnect(ctx):
     try:
         button = await bot.wait_for_component(components=components, timeout=30)
         if button.ctx.custom_id == 'yes':
-            # strava.client.deauthorize()
+            strava.deauth_user(ctx.author.username)
             embed.title='Successfully Disconnected!'
             embed.description=f'You are now disconnected from {BOTNAME}'
             await message.edit(embed=embed,components=[],context=ctx)
@@ -186,5 +186,4 @@ async def recap_autocomplete(ctx):
             }
         ]
     )
-
 bot.start()
