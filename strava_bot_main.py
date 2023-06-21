@@ -2,14 +2,11 @@
 import os
 # Import load_dotenv function from dotenv module.
 from dotenv import load_dotenv
-#from discord import Intents
-#from discord.ext import commands
 import strava
 #import pandas
 import interactions
 import seaborn as sns
 import matplotlib.pyplot as plt
-import io
 import graphs_and_stats as graphs
 
 ORANGE='#FC4C02'
@@ -25,10 +22,6 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 intents = interactions.Intents.DEFAULT
 
 bot = interactions.Client(token=TOKEN, intents=intents)
-
-# @bot.event
-# async def on_ready():
-#     print(f'we have logged in as {bot.user}')
 
 @interactions.slash_command(name='help',description = 'hello')
 async def test(ctx):
@@ -53,10 +46,10 @@ async def login(ctx):
 @interactions.slash_option(name='code', description='Enter code from localhost here', opt_type=interactions.OptionType.STRING)
 async def enter_code(ctx,code=''):
     try:
-        access_token = strava.get_access_token(code)
+        strava.get_access_tokens(code)
         embed = interactions.Embed(
             title="Strava Login",
-            description=f"Success! Here is your access token: {access_token}",
+            description=f"Success! You're logged in now!",
             color=ORANGE
         )
         embed.set_thumbnail(url='attachment://powered.png')
@@ -65,7 +58,7 @@ async def enter_code(ctx,code=''):
     except:
         embed = interactions.Embed(
             title="Strava Login",
-            description="Error! Code did not work",
+            description=f"Error! Code did not work.",
             color=ORANGE
         )
         await ctx.send(embed = embed,ephemeral=True)
@@ -95,6 +88,7 @@ async def disconnect(ctx):
     try:
         button = await bot.wait_for_component(components=components, timeout=30)
         if button.ctx.custom_id == 'yes':
+            # strava.client.deauthorize()
             embed.title='Successfully Disconnected!'
             embed.description=f'You are now disconnected from {BOTNAME}'
             await message.edit(embed=embed,components=[],context=ctx)
