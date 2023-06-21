@@ -14,13 +14,13 @@ if(cur.execute(f"SELECT name FROM sqlite_master WHERE name='{TABLE}'").fetchone(
                 UNIQUE(user_id,auth_code))""")
 con.close()
 
-def insert_val(user_id,auth_code,access_token):
+def insert_val(user_id,auth_code,access_token,refresh_tok,expires_at):
     con = sqlite3.connect("strava_bot.db")
     cur = con.cursor()
-    if(not(cur.execute(f"SELECT * FROM {TABLE} WHERE name=?",(user_id,)).fetchall() is None)):
-        cur.execute(f"DELETE FROM {TABLE} WHERE name=?", (user_id,))
+    if(not(cur.execute(f"SELECT * FROM {TABLE} WHERE user_id=?",(user_id,)).fetchall() is None)):
+        cur.execute(f"DELETE FROM {TABLE} WHERE user_id=?", (user_id,))
         cur.commit()
-    cur.execute(f"INSERT INTO {TABLE} VALUES(?,?,?)",(user_id,auth_code,access_token,))
+    cur.execute(f"INSERT INTO {TABLE} VALUES(?,?,?,?,?)",(user_id,auth_code,access_token,refresh_tok,expires_at,))
     con.commit()
     print("successful insert!")
     con.close()
