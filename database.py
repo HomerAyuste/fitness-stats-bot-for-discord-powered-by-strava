@@ -19,7 +19,7 @@ def insert_val(user_id,auth_code,access_token,refresh_tok,expires_at):
     cur = con.cursor()
     if(not(cur.execute(f"SELECT * FROM {TABLE} WHERE user_id=?",(user_id,)).fetchall() is None)):
         cur.execute(f"DELETE FROM {TABLE} WHERE user_id=?", (user_id,))
-        cur.commit()
+        con.commit()
     cur.execute(f"INSERT INTO {TABLE} VALUES(?,?,?,?,?)",(user_id,auth_code,access_token,refresh_tok,expires_at,))
     con.commit()
     print("successful insert!")
@@ -42,4 +42,13 @@ def update_tokens(user_id,access_token,refresh_token,expires_at):
     cur.execute(f'UPDATE {TABLE} SET access_token=?, refresh_token=?,expires_at=? WHERE user_id=?',
                 (access_token,refresh_token,expires_at,user_id))
     con.commit()
+    print('successful update!')
+    con.close()
+
+def delete_user(user_id):
+    con = sqlite3.connect("strava_bot.db")
+    cur = con.cursor()
+    if(not(cur.execute(f"SELECT * FROM {TABLE} WHERE user_id=?",(user_id,)).fetchall() is None)):
+        cur.execute(f"DELETE FROM {TABLE} WHERE user_id=?", (user_id,))
+        con.commit()
     con.close()
