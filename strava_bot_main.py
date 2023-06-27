@@ -21,7 +21,7 @@ intents = interactions.Intents.DEFAULT
 bot = interactions.Client(token=TOKEN, intents=intents)
 
 @interactions.slash_command(name='help',description = 'hello')
-async def test(ctx):
+async def help(ctx):
     await ctx.send("hello")
 
 #login command: gives user strava auth url (url is from strava.py)
@@ -99,17 +99,21 @@ async def disconnect(ctx):
         )
         await message.edit(embed=embed,components=[],context=ctx)
 
-
-#distweek command: makes a graph from activities showing activity distance split by type and day of week
-@interactions.slash_command(name="distweek", description="Display Your Activity distance By Type and Day of Week")
-@interactions.slash_option(name='user', description='The user to show (default self)', opt_type=interactions.OptionType.USER)
-@interactions.slash_option(name='activities', description='Activities to show (defaults to show all)',
+def activity_options():
+    def wrapper(func):
+        return interactions.slash_option(name='activities', description='Activities to show (defaults to show all)',
                         opt_type=interactions.OptionType.STRING,
                         choices=[
                             interactions.SlashCommandChoice(name='Ride',value='Ride'),
                             interactions.SlashCommandChoice(name='Hike',value='Hike'),
                             interactions.SlashCommandChoice(name='E-Bike Ride',value='EBikeRide')
-                           ])
+                           ])(func)
+    return wrapper
+
+#distweek command: makes a graph from activities showing activity distance split by type and day of week
+@interactions.slash_command(name="distweek", description="Display Your Activity distance By Type and Day of Week")
+@interactions.slash_option(name='user', description='The user to show (default self)', opt_type=interactions.OptionType.USER)
+@activity_options()
 async def distWeek(ctx, user=None, activities=''):
     if(user == None):
         user = ctx.author
@@ -129,13 +133,7 @@ async def distWeek(ctx, user=None, activities=''):
 #recap command: attempts to recreate Strava's monthly/yearly recap
 @interactions.slash_command(name="recap", description="Display Your Activity Recap for any year or all time recap")
 @interactions.slash_option(name='user', description='The user to show (default self)', opt_type=interactions.OptionType.USER)
-@interactions.slash_option(name='activities', description='One activity to show (defaults to show all)',
-                        opt_type=interactions.OptionType.STRING,
-                        choices=[
-                            interactions.SlashCommandChoice(name='Ride',value='Ride'),
-                            interactions.SlashCommandChoice(name='Hike',value='Hike'),
-                            interactions.SlashCommandChoice(name='E-Bike Ride',value='EBikeRide')
-                           ])
+@activity_options()
 @interactions.slash_option(name='time_period', description='Time period to show (defaults to show all time)',
                         opt_type=interactions.OptionType.STRING,
                         # choices=[
@@ -167,7 +165,7 @@ async def recap(ctx, user=None,activities='',time_period='All time',recap_type='
     )
     await ctx.defer()
     df = strava.get_athlete_df(user.username)
-    image = graphs.recap(df, title,y_column=recap_type)
+    image = graphs.recap(df, title,activities,y_column=recap_type)
     embed.set_image(url='attachment://graph.png')
     embed.set_thumbnail(url='attachment://powered.png')
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
