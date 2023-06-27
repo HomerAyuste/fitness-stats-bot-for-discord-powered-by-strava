@@ -29,12 +29,13 @@ def fetch_access_tokens(user_id):
     try:
         con = sqlite3.connect("strava_bot.db")
         cur = con.cursor()
-        res = cur.execute(f"SELECT access_token, refresh_token, expires_at FROM {TABLE} WHERE user_id='?'", (user_id,))
+        res = cur.execute(f"SELECT access_token, refresh_token, expires_at FROM {TABLE} WHERE user_id=?", (user_id,))
         access_token, refresh_token, expires_at = res.fetchone()
         con.close()
         return access_token, refresh_token, expires_at
     except:
-        return None
+        return None,None,None
+
 
 def update_tokens(user_id,access_token,refresh_token,expires_at):
     con = sqlite3.connect("strava_bot.db")

@@ -3,10 +3,7 @@ import os
 # Import load_dotenv function from dotenv module.
 from dotenv import load_dotenv
 import strava
-#import pandas
 import interactions
-import seaborn as sns
-import matplotlib.pyplot as plt
 import graphs_and_stats as graphs
 
 ORANGE='#FC4C02'
@@ -121,7 +118,9 @@ async def distWeek(ctx, user=None, activities=''):
         title=title,
         color=ORANGE
     )
-    image = graphs.distweek(strava.df,activities,title)
+    await ctx.defer()
+    df = strava.get_athlete_df(user.username)
+    image = graphs.distweek(df,activities,title)
     embed.set_image(url='attachment://graph.png')
     embed.set_thumbnail(url='attachment://powered.png')
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
@@ -166,7 +165,9 @@ async def recap(ctx, user=None,activities='',time_period='All time',recap_type='
         title=title,
         color = ORANGE
     )
-    image = graphs.recap(strava.df, title,y_column=recap_type)
+    await ctx.defer()
+    df = strava.get_athlete_df(user.username)
+    image = graphs.recap(df, title,y_column=recap_type)
     embed.set_image(url='attachment://graph.png')
     embed.set_thumbnail(url='attachment://powered.png')
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
@@ -186,4 +187,5 @@ async def recap_autocomplete(ctx):
             }
         ]
     )
+print("bot is now running")
 bot.start()
