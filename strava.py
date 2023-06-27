@@ -86,7 +86,7 @@ def refresh_athlete_tokens(user_id):
         access_token,refresh_tok,expires_at=refresh_response['access_token'],refresh_response['refresh_token'],refresh_response['expires_at']
     else:
         print('Token still valid, expires at {}'
-            .format(time.strftime("%a, %d %b %Y %H:%M:%S %Z", time.localtime(expires_at))))
+            .format(time.strftime("%a, %d %b %Y %H:%M:%S %Z", time.localtime(int(expires_at)))))
     return access_token,refresh_tok,expires_at
 
 def deauth_user(user_id):
