@@ -15,13 +15,6 @@ CLIENT_ID = os.getenv('STRAVA_CLIENT_ID')
 
 client = Client()
 
-
-#Get URL for user to authenticate
-#TODO: find way to get code (for token) after user authenticates
-# url = client.authorization_url(client_id=CLIENT_ID, 
-#                                redirect_uri='http://127.0.0.1:5000/authorization',
-#                                 scope=['read_all','profile:read_all','activity:read_all'])
-
 #Get access code by exchanging with auth code (access code lasts for 6hrs)
 def get_access_tokens(user_id,code):
     try:
@@ -32,7 +25,7 @@ def get_access_tokens(user_id,code):
         raise Exception('Error in getting access token')
 
 def get_athlete_df(user_id):
-    access_token, _, _ = database.fetch_access_tokens(user_id)
+    access_token, _, _ = refresh_athlete_tokens(user_id)
     client = Client(access_token=access_token)
 
     #look at activities and create a dataframe
@@ -84,19 +77,20 @@ def get_athlete_df(user_id):
 def refresh_athlete_tokens(user_id):
     #check when the access token expires and if it expired, then refresh it
     access_token,refresh_tok,expires_at=database.fetch_access_tokens(user_id)
+    client = Client(access_token=access_token)
     if time.time() > float(expires_at):
         print('Token has expired, will refresh')
         refresh_response = client.refresh_access_token(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, refresh_token=refresh_tok)
-        access_token = refresh_response
-        database.update_tokens(user_id, refresh_response['access_token'],refresh_response['refresh_token'],refresh_response['refresh_token'])
+        database.update_tokens(user_id, refresh_response['access_token'],refresh_response['refresh_token'],refresh_response['expires_at'])
         print('Refreshed token saved to file')
+        access_token,refresh_tok,expires_at=refresh_response['access_token'],refresh_response['refresh_token'],refresh_response['expires_at']
     else:
         print('Token still valid, expires at {}'
-            .format(time.strftime("%a, %d %b %Y %H:%M:%S %Z", time.localtime(access_token['expires_at']))))
-    return
+            .format(time.strftime("%a, %d %b %Y %H:%M:%S %Z", time.localtime(expires_at))))
+    return access_token,refresh_tok,expires_at
 
 def deauth_user(user_id):
     access_tok,_,_= database.fetch_access_tokens(user_id)
-    client = Client(access_tok)
+    client = Client(access_token=access_tok)
     client.deauthorize()
     database.delete_user(user_id)
