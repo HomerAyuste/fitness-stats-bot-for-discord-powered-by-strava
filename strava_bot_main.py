@@ -121,6 +121,7 @@ async def distWeek(ctx, user=None, activities=''):
         title=title,
         color=ORANGE
     )
+    await ctx.defer()
     df = strava.get_athlete_df(user.username)
     image = graphs.distweek(df,activities,title)
     embed.set_image(url='attachment://graph.png')
@@ -167,6 +168,7 @@ async def recap(ctx, user=None,activities='',time_period='All time',recap_type='
         title=title,
         color = ORANGE
     )
+    await ctx.defer()
     df = strava.get_athlete_df(user.username)
     image = graphs.recap(df, title,y_column=recap_type)
     embed.set_image(url='attachment://graph.png')
@@ -188,4 +190,5 @@ async def recap_autocomplete(ctx):
             }
         ]
     )
+print("bot is now running")
 bot.start()
