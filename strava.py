@@ -36,7 +36,8 @@ def save_access_token():
     with open('./access_token.pickle','wb') as f:
         pickle.dump(access_token,f)
 
-def get_athlete_df(access_token):
+def get_athlete_df(user_id):
+    access_token, _, _ = database.fetch_access_tokens(user_id)
     client = Client(access_token=access_token)
 
     #look at activities and create a dataframe
@@ -91,27 +92,6 @@ with open('./access_token.pickle', 'rb') as f:
     
 print('Latest access token read from file:')
 print(access_token)
-
-#check when the access token expires and if it expired, then refresh it
-if time.time() > access_token['expires_at']:
-    print('Token has expired, will refresh')
-    refresh_response = client.refresh_access_token(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, refresh_token=access_token['refresh_token'])
-    access_token = refresh_response
-    with open('./access_token.pickle', 'wb') as f:
-        pickle.dump(refresh_response, f)
-    print('Refreshed token saved to file')
-    client.access_token = refresh_response['access_token']
-    client.refresh_token = refresh_response['refresh_token']
-    client.token_expires_at = refresh_response['expires_at']
-    df = get_athlete_df(refresh_response['access_token'])
-        
-else:
-    print('Token still valid, expires at {}'
-          .format(time.strftime("%a, %d %b %Y %H:%M:%S %Z", time.localtime(access_token['expires_at']))))
-    client.access_token = access_token['access_token']
-    client.refresh_token = access_token['refresh_token']
-    client.token_expires_at = access_token['expires_at']
-    df = get_athlete_df(access_token['access_token'])
 
 def refresh_athlete_tokens(user_id):
     #check when the access token expires and if it expired, then refresh it
