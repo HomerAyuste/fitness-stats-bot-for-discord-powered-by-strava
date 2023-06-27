@@ -7,8 +7,6 @@ import pickle
 import time
 import pandas as pd
 import database
-from datetime import datetime
-#import matplotlib.pyplot
 
 #get client id and secret from .env
 load_dotenv()
@@ -24,18 +22,14 @@ client = Client()
 #                                redirect_uri='http://127.0.0.1:5000/authorization',
 #                                 scope=['read_all','profile:read_all','activity:read_all'])
 
-#print(url)
-
 #Get access code by exchanging with auth code (access code lasts for 6hrs)
-#access code is saved locally for now
-
 def get_access_tokens(user_id,code):
     try:
         client = Client()
         access_token = client.exchange_code_for_token(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, code=code)
         database.insert_val(user_id,code,access_token['access_token'],access_token['refresh_token'],access_token['expires_at'])
     except:
-        print('error')
+        raise Exception('Error in getting access token')
 
 #save access token locally
 def save_access_token():
@@ -128,7 +122,6 @@ def refresh_athlete_tokens(user_id):
         access_token = refresh_response
         database.update_tokens(user_id, refresh_response['access_token'],refresh_response['refresh_token'],refresh_response['refresh_token'])
         print('Refreshed token saved to file')
-            
     else:
         print('Token still valid, expires at {}'
             .format(time.strftime("%a, %d %b %Y %H:%M:%S %Z", time.localtime(access_token['expires_at']))))
