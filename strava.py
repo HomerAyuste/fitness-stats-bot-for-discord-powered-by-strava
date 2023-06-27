@@ -31,11 +31,6 @@ def get_access_tokens(user_id,code):
     except:
         raise Exception('Error in getting access token')
 
-#save access token locally
-def save_access_token():
-    with open('./access_token.pickle','wb') as f:
-        pickle.dump(access_token,f)
-
 def get_athlete_df(user_id):
     access_token, _, _ = database.fetch_access_tokens(user_id)
     client = Client(access_token=access_token)
@@ -85,13 +80,6 @@ def get_athlete_df(user_id):
     df['moving_time_hr'] = df['moving_time'].dt.seconds/3600
 
     return df
-
-#retrieve access token locally
-with open('./access_token.pickle', 'rb') as f:
-    access_token = pickle.load(f)
-    
-print('Latest access token read from file:')
-print(access_token)
 
 def refresh_athlete_tokens(user_id):
     #check when the access token expires and if it expired, then refresh it
