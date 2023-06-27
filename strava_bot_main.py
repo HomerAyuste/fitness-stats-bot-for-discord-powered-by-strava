@@ -3,10 +3,7 @@ import os
 # Import load_dotenv function from dotenv module.
 from dotenv import load_dotenv
 import strava
-#import pandas
 import interactions
-import seaborn as sns
-import matplotlib.pyplot as plt
 import graphs_and_stats as graphs
 
 ORANGE='#FC4C02'
