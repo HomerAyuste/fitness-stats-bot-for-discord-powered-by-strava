@@ -4,7 +4,8 @@ import io
 import seaborn as sns
 from interactions import File
 
-def recap(df, title, column='month_and_year', y_column='moving_time_hr'):
+def recap(df, title,activity, column='month_and_year', y_column='moving_time_hr'):
+
     if column =='month_and_year':
         df[column] = df['month_of_year'].map(str) + '-' + df['year'].map(str)
         df[column] = pd.to_datetime(df[column],format='%m-%Y')
@@ -46,3 +47,20 @@ def distweek(df,activities,title):
     data_stream.seek(0)
     image = File(data_stream, file_name='graph.png')
     return image
+
+def boxplots(df):
+
+    #save image in data stream
+    data_stream = io.BytesIO()
+    #plt.figure(figsize=(10,6))
+    plt.savefig(data_stream,format='png')
+    plt.close()
+    data_stream.seek(0)
+    image = File(data_stream, file_name='graph.png')
+    return image
+
+def distance_leaderboard():
+    return
+
+def linegraph():
+    return
