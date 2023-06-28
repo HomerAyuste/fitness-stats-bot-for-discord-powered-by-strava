@@ -62,5 +62,10 @@ def boxplots(df):
 def distance_leaderboard():
     return
 
-def linegraph():
+def linegraph(df,activity,limit,period, measurement):
+    if activity != None:
+        df = df.loc[df.type == activity]
+    x = df.starting_date_local
+    y = df[measurement]
+    plt.plot(x,y)
     return
