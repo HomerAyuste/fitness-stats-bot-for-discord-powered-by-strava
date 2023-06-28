@@ -3,7 +3,6 @@ import os
 # Import load_dotenv function from dotenv module.
 from dotenv import load_dotenv
 from stravalib import Client
-import pickle
 import time
 import pandas as pd
 import database
