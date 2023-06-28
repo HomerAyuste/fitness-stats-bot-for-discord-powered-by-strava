@@ -8,3 +8,6 @@ The repository contains the code for a Python-based Discord bot. The bot is host
 
 - [interactions.py](https://github.com/interactions-py/interactions.py) - A library for creating interactive message menus in Discord
 - [stravalib](https://github.com/stravalib/stravalib) - A Python package for accessing Strava data from the Strava V3 web service
+
+[Invite link](https://discord.com/api/oauth2/authorize?client_id=1113502886945620080&permissions=277025508352&scope=bot%20applications.commands) for bot
+(Note: the bot is almost never running at the moment except for testing)
