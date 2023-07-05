@@ -2,5 +2,14 @@ services:
   bot:
     image: python:3-slim
     working_dir: /strava_bot
+    command: python ./strava_bot_main.py
+    volumes:
+      - ./:/strava_bot
+    depends_on:
+      - requirements
+  requirements:
+    image: python:3-slim
+    working_dir: /strava_bot
+    command: pip install --no-cache-dir -r requirements.txt
     volumes:
       - ./:/strava_bot
