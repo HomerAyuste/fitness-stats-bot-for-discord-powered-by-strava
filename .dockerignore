@@ -2,3 +2,5 @@
 access_token.pickle
 .gitignore
 **/*.md
+__pycache__
+.git
