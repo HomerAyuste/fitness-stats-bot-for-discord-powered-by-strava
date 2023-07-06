@@ -2,5 +2,8 @@
 access_token.pickle
 .gitignore
 **/*.md
-__pycache__
+**/__pycache__
 .git
+**/docker-compose*
+**/Dockerfile*
+**/.dockerignore
