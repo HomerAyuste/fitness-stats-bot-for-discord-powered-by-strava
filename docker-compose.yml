@@ -1,4 +1,4 @@
 services:
-  bot:
+  app:
     build: .
     working_dir: /strava_bot
