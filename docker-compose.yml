@@ -1,7 +1,6 @@
 services:
   bot:
-    image: python:3-slim
+    build: .
     working_dir: /strava_bot
-    command: sh -c pip install --no-cache-dir -r requirements.txt && python ./strava_bot_main.py
     volumes:
       - ./:/strava_bot
