@@ -2,5 +2,3 @@ services:
   app:
     build: .
     working_dir: /strava_bot
-    volumes:
-      - ./:/strava_bot
