@@ -69,3 +69,13 @@ def linegraph(df,activity,limit,period, measurement):
     y = df[measurement]
     plt.plot(x,y)
     return
+
+def cumulative_graph(df, activity, measurement):
+    #save image in data stream
+    data_stream = io.BytesIO()
+    #plt.figure(figsize=(10,6))
+    plt.savefig(data_stream,format='png')
+    plt.close()
+    data_stream.seek(0)
+    image = File(data_stream, file_name='graph.png')
+    return image
