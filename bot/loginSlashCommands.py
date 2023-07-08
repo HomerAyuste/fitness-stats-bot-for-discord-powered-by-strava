@@ -5,15 +5,15 @@ ORANGE='#FC4C02'
 BOTNAME='Fitness Stats Bot'
 POWERED='Powered by Strava'
 AUTH_URL="https://www.strava.com/oauth/authorize?client_id=108504&redirect_uri=http%3A%2F%2F127.0.0.1%3A5000%2Fauthorization&approval_prompt=auto&response_type=code&scope=read_all%2Cprofile%3Aread_all%2Cactivity%3Aread_all"
-POWERED_IMG = interactions.File('api_logo_pwrdBy_strava_stack_light.png',file_name='powered.png')
-CONNECT_IMG = interactions.File('btn_strava_connectwith_orange.png', file_name='connect.png')
+POWERED_IMG = interactions.File('./images/api_logo_pwrdBy_strava_stack_light.png',file_name='powered.png')
+CONNECT_IMG = interactions.File('./images/btn_strava_connectwith_orange.png', file_name='connect.png')
 
 
 class Login(interactions.Extension):
     #login command: gives user strava auth url (url is from strava.py)
     @interactions.slash_command(name='login',description = f'Gives you a link to connect your Strava account to {BOTNAME}',
                                 sub_cmd_name='link', sub_cmd_description=f'Gives you a link to connect your Strava account to {BOTNAME}')
-    async def login(ctx):
+    async def login(self, ctx):
         embed = interactions.Embed(
             title="Strava Login",
             description=f"[Click here]({AUTH_URL}) to connect your Strava account to {BOTNAME}",
@@ -27,7 +27,7 @@ class Login(interactions.Extension):
 
     @login.subcommand(sub_cmd_name='enter_code', sub_cmd_description='Enter code from localhost')
     @interactions.slash_option(name='code', description='Enter code from localhost here', opt_type=interactions.OptionType.STRING)
-    async def enter_code(ctx,code=''):
+    async def enter_code(self, ctx,code=''):
         try:
             strava.get_access_tokens(ctx.author.username,code)
             embed = interactions.Embed(
@@ -47,7 +47,7 @@ class Login(interactions.Extension):
             await ctx.send(embed = embed,ephemeral=True)
         
     @login.subcommand(sub_cmd_name='disconnect', sub_cmd_description=f'Disconnect your strava account from {BOTNAME}')
-    async def disconnect(ctx):
+    async def disconnect(self, ctx):
         components: list[interactions.ActionRow] = interactions.spread_to_rows(
             interactions.Button(
                 custom_id='yes',
@@ -69,7 +69,7 @@ class Login(interactions.Extension):
         message
 
         try:
-            button = await bot.wait_for_component(components=components, timeout=30)
+            button = await self.bot.wait_for_component(components=components, timeout=30)
             if button.ctx.custom_id == 'yes':
                 strava.deauth_user(ctx.author.username)
                 embed.title='Successfully Disconnected!'

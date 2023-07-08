@@ -7,4 +7,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD [ "python", "./strava_bot_main.py" ]
+CMD [ "python", "bot/strava_bot_main.py" ]
