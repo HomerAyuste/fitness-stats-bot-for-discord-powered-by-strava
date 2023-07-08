@@ -10,7 +10,6 @@ ORANGE='#FC4C02'
 BOTNAME='Fitness Stats Bot'
 POWERED='Powered by Strava'
 POWERED_IMG = interactions.File('./images/api_logo_pwrdBy_strava_stack_light.png',file_name='powered.png')
-CONNECT_IMG = interactions.File('./images/btn_strava_connectwith_orange.png', file_name='connect.png')
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
