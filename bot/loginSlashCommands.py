@@ -5,8 +5,8 @@ ORANGE='#FC4C02'
 BOTNAME='Fitness Stats Bot'
 POWERED='Powered by Strava'
 AUTH_URL="https://www.strava.com/oauth/authorize?client_id=108504&redirect_uri=http%3A%2F%2F127.0.0.1%3A5000%2Fauthorization&approval_prompt=auto&response_type=code&scope=read_all%2Cprofile%3Aread_all%2Cactivity%3Aread_all"
-POWERED_IMG = interactions.File('api_logo_pwrdBy_strava_stack_light.png',file_name='powered.png')
-CONNECT_IMG = interactions.File('btn_strava_connectwith_orange.png', file_name='connect.png')
+POWERED_IMG = interactions.File('./images/api_logo_pwrdBy_strava_stack_light.png',file_name='powered.png')
+CONNECT_IMG = interactions.File('./images/btn_strava_connectwith_orange.png', file_name='connect.png')
 
 
 class Login(interactions.Extension):
@@ -69,7 +69,7 @@ class Login(interactions.Extension):
         message
 
         try:
-            button = await bot.wait_for_component(components=components, timeout=30)
+            button = await self.bot.wait_for_component(components=components, timeout=30)
             if button.ctx.custom_id == 'yes':
                 strava.deauth_user(ctx.author.username)
                 embed.title='Successfully Disconnected!'
