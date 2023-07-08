@@ -4,6 +4,17 @@ import io
 import seaborn as sns
 from interactions import File
 
+def save_graph():
+    #save image in data stream
+    data_stream = io.BytesIO()
+    #plt.figure(figsize=(10,6))
+    plt.savefig(data_stream,format='png')
+
+    plt.close()
+    data_stream.seek(0)
+    image = File(data_stream, file_name='graph.png')
+    return image
+
 def recap(df, title,activity, column='month_and_year', y_column='moving_time_hr'):
 
     if column =='month_and_year':
@@ -18,14 +29,7 @@ def recap(df, title,activity, column='month_and_year', y_column='moving_time_hr'
     plt.title(title)
     plt.ylabel('Hours' if y_column=='moving_time_hr' else 'Distance (km)')
     plt.grid(axis='y')
-    #save image in data stream
-    data_stream = io.BytesIO()
-    #plt.figure(figsize=(10,6))
-    plt.savefig(data_stream,format='png')
-
-    plt.close()
-    data_stream.seek(0)
-    image = File(data_stream, file_name='graph.png')
+    image = save_graph()
     return image
 
 def distweek(df,activities,title):
@@ -39,24 +43,12 @@ def distweek(df,activities,title):
     g.fig.subplots_adjust(top=.9)
     g.fig.suptitle(title)
 
-    #save image in data stream
-    data_stream = io.BytesIO()
-    #plt.figure(figsize=(10,6))
-    plt.savefig(data_stream,format='png')
-    plt.close()
-    data_stream.seek(0)
-    image = File(data_stream, file_name='graph.png')
+    image = save_graph()
     return image
 
 def boxplots(df):
 
-    #save image in data stream
-    data_stream = io.BytesIO()
-    #plt.figure(figsize=(10,6))
-    plt.savefig(data_stream,format='png')
-    plt.close()
-    data_stream.seek(0)
-    image = File(data_stream, file_name='graph.png')
+    image = save_graph()
     return image
 
 def distance_leaderboard():
@@ -71,11 +63,5 @@ def linegraph(df,activity,limit,period, measurement):
     return
 
 def cumulative_graph(df, activity, measurement):
-    #save image in data stream
-    data_stream = io.BytesIO()
-    #plt.figure(figsize=(10,6))
-    plt.savefig(data_stream,format='png')
-    plt.close()
-    data_stream.seek(0)
-    image = File(data_stream, file_name='graph.png')
+    image = save_graph()
     return image
