@@ -10,7 +10,7 @@ CONNECT_IMG = interactions.File('./images/btn_strava_connectwith_orange.png', fi
 
 
 class Login(interactions.Extension):
-    #login command: gives user strava auth url (url is from strava.py)
+    #login command: gives user strava auth url
     @interactions.slash_command(name='login',description = f'Gives you a link to connect your Strava account to {BOTNAME}',
                                 sub_cmd_name='link', sub_cmd_description=f'Gives you a link to connect your Strava account to {BOTNAME}')
     async def login(self, ctx):
