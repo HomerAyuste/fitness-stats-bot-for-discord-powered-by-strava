@@ -48,7 +48,7 @@ def distweek(df : pd.DataFrame,activities : str,title :str):
     image = save_graph()
     return image
 
-def boxplots(df):
+def boxplots(df:pd.DataFrame):
 
     image = save_graph()
     return image
