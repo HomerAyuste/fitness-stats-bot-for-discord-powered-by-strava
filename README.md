@@ -12,6 +12,8 @@ The repository contains the code for a Python-based Discord bot. The bot is curr
 [Invite link](https://discord.com/api/oauth2/authorize?client_id=1113502886945620080&permissions=277025508352&scope=bot%20applications.commands) for bot
 (Note: the bot is almost never running at the moment except for testing)
 
+[Server link](https://discord.gg/eXr876pt9Y) if you would like to chat with me about the bot or find other Strava users on Discord.
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first
