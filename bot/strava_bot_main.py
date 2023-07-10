@@ -33,6 +33,16 @@ def activity_options():
                            ])(func)
     return wrapper
 
+def measurement_options():
+    def wrapper(func):
+        return interactions.slash_option(name='measurement',description='What measurement to use for the graph (default: time (hours))',
+                        opt_type=interactions.OptionType.STRING,
+                        choices=[
+                            interactions.SlashCommandChoice(name='Time',value='elapsed_time_hr'),
+                            interactions.SlashCommandChoice(name='Distance',value='distance'),
+                           ])(func)
+    return wrapper
+
 #distweek command: makes a graph from activities showing activity distance split by type and day of week
 @interactions.slash_command(name="distweek", description="Display Your Activity distance By Type and Day of Week")
 @interactions.slash_option(name='user', description='The user to show (default self)', opt_type=interactions.OptionType.USER)
@@ -112,7 +122,7 @@ async def recap_autocomplete(ctx):
 #distweek command: makes a graph from activities showing activity distance split by type and day of week
 @interactions.slash_command(name="cumulative", description="Display Cumulative Time or Distance Covered for One or All Activities")
 @interactions.slash_option(name='user', description='The user to show (default self)', opt_type=interactions.OptionType.USER)
-@interactions.slash_option(name='measurement',description='What measurement to use for the graph (default: time (hours))',opt_type=interactions.OptionType.STRING)
+@measurement_options()
 @activity_options()
 async def cumulative(ctx, user=None, measurement='elapsed_time_hr',activities=''):
     if(user == None):
