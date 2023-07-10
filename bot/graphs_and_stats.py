@@ -65,7 +65,7 @@ def linegraph(df:pd.DataFrame,activity,limit,period, measurement):
     plt.plot(x,y)
     return
 
-def cumulative_graph(df:pd.DataFrame, activity:str, measurement:str):
+def cumulative_graph(df:pd.DataFrame, activity:str, measurement:str, title:str):
     fig, ax = plt.subplots(1)
     for year in range(df['year'].min(),df['year'].max()+1):
         df1 = df.loc[df.year==year]
@@ -76,6 +76,8 @@ def cumulative_graph(df:pd.DataFrame, activity:str, measurement:str):
         ax.plot(list(range(1,len(year_data)+1)),accum_data,'-',label=year)
     ax.legend()
     fig.autofmt_xdate()
+    ax.set_title(title)
+    ax.set_xlabel('Days')
     ax.grid(axis='y')
     image = save_graph()
     return image

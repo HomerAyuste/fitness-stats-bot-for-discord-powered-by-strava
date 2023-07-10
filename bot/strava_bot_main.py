@@ -117,7 +117,7 @@ async def recap_autocomplete(ctx):
 async def cumulative(ctx, user=None, measurement='elapsed_time_hr',activities=''):
     if(user == None):
         user = ctx.author
-    title = f"{user.display_name}'s Cumulative Time Spent " if measurement=='elased_time_hr' else f"{user.display_name}'s Cumulative Distance Covered "
+    title = f"{user.display_name}'s Cumulative Time Spent " if measurement=='elapsed_time_hr' else f"{user.display_name}'s Cumulative Distance Covered "
     title += 'on All Activities' if activities =='' else f'on {activities} activities'
     embed = interactions.Embed(
         title=title,
@@ -125,7 +125,7 @@ async def cumulative(ctx, user=None, measurement='elapsed_time_hr',activities=''
     )
     await ctx.defer()
     df = strava.get_athlete_df(user.username)
-    image = graphs.cumulative_graph(df,activities,measurement)
+    image = graphs.cumulative_graph(df,activities,measurement,title)
     embed.set_image(url='attachment://graph.png')
     embed.set_thumbnail(url='attachment://powered.png')
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
