@@ -5,6 +5,7 @@ import io
 import seaborn as sns
 from interactions import File
 import numpy as np
+import itertools
 
 def save_graph():
     #save image in data stream
@@ -68,11 +69,11 @@ def cumulative_graph(df:pd.DataFrame, activity:str, measurement:str):
     fig, ax = plt.subplots(1)
     for year in range(df['year'].min(),df['year'].max()+1):
         df1 = df.loc[df.year==year]
-        x = df1['start_date_local']
-        v = df1[measurement]
-        v = np.array(v).cumsum().flip()
-        print(v)
-        ax.plot(x,v,'-',label=year)
+        year_data = [0] * 366
+        for i in df1.index:
+            year_data[df1['start_date_local'][i].timetuple().tm_yday] += df1['elapsed_time_hr'][i]
+        accum_data = list(itertools.accumulate(year_data))
+        ax.plot(list(range(1,len(year_data)+1)),accum_data,'-',label=year)
     ax.legend()
     fig.autofmt_xdate()
     ax.grid(axis='y')
