@@ -64,14 +64,18 @@ def linegraph(df:pd.DataFrame,activity,limit,period, measurement):
     plt.plot(x,y)
     return
 
-def cumulative_graph(df:pd.DataFrame, activity:str, measurement):
-
-    x, v = [d[0] for d in df['start_date_local']], [d[1] for d in df['start_date_local']]
-    v = np.array(v).cumsum()
+def cumulative_graph(df:pd.DataFrame, activity:str, measurement:str):
     fig, ax = plt.subplots(1)
-    ax.plot(x,v,'-o')
+    for year in range(df['year'].min(),df['year'].max()):
+        df1 = df.loc[df.year==year]
+        x = df1['start_date_local']
+        v = df1[measurement]
+        v = np.array(v).cumsum()
+        ax.plot(x,v,'-',label=year)
+    ax.legend()
     fig.autofmt_xdate()
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %d'))
     ax.xaxis.set_major_locator(mdates.DayLocator())
+    ax.grid(axis='y')
     image = save_graph()
     return image
