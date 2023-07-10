@@ -114,10 +114,10 @@ async def recap_autocomplete(ctx):
 @interactions.slash_option(name='user', description='The user to show (default self)', opt_type=interactions.OptionType.USER)
 @interactions.slash_option(name='measurement',description='What measurement to use for the graph (default: time (hours))',opt_type=interactions.OptionType.STRING)
 @activity_options()
-async def cumulative(ctx, user=None, measurement='time',activities=''):
+async def cumulative(ctx, user=None, measurement='elapsed_time_hr',activities=''):
     if(user == None):
         user = ctx.author
-    title = f"{user.display_name}'s Cumulative Time Spent " if measurement=='time' else f"{user.display_name}'s Cumulative Distance Covered "
+    title = f"{user.display_name}'s Cumulative Time Spent " if measurement=='elased_time_hr' else f"{user.display_name}'s Cumulative Distance Covered "
     title += 'on All Activities' if activities =='' else f'on {activities} activities'
     embed = interactions.Embed(
         title=title,
