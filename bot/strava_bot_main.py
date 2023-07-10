@@ -112,9 +112,9 @@ async def recap_autocomplete(ctx):
 #distweek command: makes a graph from activities showing activity distance split by type and day of week
 @interactions.slash_command(name="cumulative", description="Display Cumulative Time or Distance Covered for One or All Activities")
 @interactions.slash_option(name='user', description='The user to show (default self)', opt_type=interactions.OptionType.USER)
-@interactions.slash_option(name='measurement',description='What measurement to use for the graph (default: time (hours))')
+@interactions.slash_option(name='measurement',description='What measurement to use for the graph (default: time (hours))',opt_type=interactions.OptionType.STRING)
 @activity_options()
-async def cumulative(ctx, user=None, measurement='',activities=''):
+async def cumulative(ctx, user=None, measurement='time',activities=''):
     if(user == None):
         user = ctx.author
     title = f"{user.display_name}'s Cumulative Time Spent " if measurement=='time' else f"{user.display_name}'s Cumulative Distance Covered "
