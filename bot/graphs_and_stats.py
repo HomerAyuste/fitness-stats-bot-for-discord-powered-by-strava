@@ -70,7 +70,7 @@ def cumulative_graph(df:pd.DataFrame, activity:str, measurement:str, title:str):
     fig, ax = plt.subplots(1)
     #iterate through each year
     for year in range(df['year'].min(),df['year'].max()+1):
-        df1 = df.loc[df.year==year] if activity == '' else df.loc[df.year==year & df.activity==activity]
+        df1 = df.loc[df.year==year] if activity == '' else df.loc[(df.year==year) & (df.type==activity)]
         year_data = [0] * 366
         for i in df1.index:
             year_data[df1['start_date_local'][i].timetuple().tm_yday] += df1[measurement][i]
