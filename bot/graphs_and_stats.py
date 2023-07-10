@@ -1,8 +1,10 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import io
 import seaborn as sns
 from interactions import File
+import numpy as np
 
 def save_graph():
     #save image in data stream
@@ -15,7 +17,7 @@ def save_graph():
     image = File(data_stream, file_name='graph.png')
     return image
 
-def recap(df, title,activity, column='month_and_year', y_column='moving_time_hr'):
+def recap(df : pd.DataFrame, title : str,activity, column='month_and_year', y_column='moving_time_hr'):
 
     if column =='month_and_year':
         df[column] = df['month_of_year'].map(str) + '-' + df['year'].map(str)
@@ -32,7 +34,7 @@ def recap(df, title,activity, column='month_and_year', y_column='moving_time_hr'
     image = save_graph()
     return image
 
-def distweek(df,activities,title):
+def distweek(df : pd.DataFrame,activities : str,title :str):
     day_of_week_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ]
     g = sns.catplot(x='day_of_week', y='distance_km', kind='strip',
                     data=df if activities=='' else df.loc[df['type']==activities],
@@ -54,7 +56,7 @@ def boxplots(df):
 def distance_leaderboard():
     return
 
-def linegraph(df,activity,limit,period, measurement):
+def linegraph(df:pd.DataFrame,activity,limit,period, measurement):
     if activity != None:
         df = df.loc[df.type == activity]
     x = df.starting_date_local
@@ -62,6 +64,14 @@ def linegraph(df,activity,limit,period, measurement):
     plt.plot(x,y)
     return
 
-def cumulative_graph(df, activity, measurement):
+def cumulative_graph(df:pd.DataFrame, activity:str, measurement):
+
+    x, v = [d[0] for d in df['start_date_local']], [d[1] for d in df['start_date_local']]
+    v = np.array(v).cumsum()
+    fig, ax = plt.subplots(1)
+    ax.plot(x,v,'-o')
+    fig.autofmt_xdate()
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %d'))
+    ax.xaxis.set_major_locator(mdates.DayLocator())
     image = save_graph()
     return image
