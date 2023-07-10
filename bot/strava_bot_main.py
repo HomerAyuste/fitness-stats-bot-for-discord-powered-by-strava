@@ -109,6 +109,28 @@ async def recap_autocomplete(ctx):
         ]
     )
 
-bot.load_extension("loginSlashCommands")
+#distweek command: makes a graph from activities showing activity distance split by type and day of week
+@interactions.slash_command(name="cumulative", description="Display Cumulative Time or Distance Covered for One or All Activities")
+@interactions.slash_option(name='user', description='The user to show (default self)', opt_type=interactions.OptionType.USER)
+@interactions.slash_option(name='measurement',description='What measurement to use for the graph (default: time (hours))')
+@activity_options()
+async def cumulative(ctx, user=None, measurement='',activities=''):
+    if(user == None):
+        user = ctx.author
+    title = f"{user.display_name}'s Cumulative Time Spent " if measurement=='time' else f"{user.display_name}'s Cumulative Distance Covered "
+    title += 'on All Activities' if activities =='' else f'on {activities} activities'
+    embed = interactions.Embed(
+        title=title,
+        color=ORANGE
+    )
+    await ctx.defer()
+    df = strava.get_athlete_df(user.username)
+    image = graphs.cumulative_graph(df,activities,measurement)
+    embed.set_image(url='attachment://graph.png')
+    embed.set_thumbnail(url='attachment://powered.png')
+    embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
+    await ctx.send(embed=embed, files=[POWERED_IMG,image])
+
 print("bot is now running")
+bot.load_extension("loginSlashCommands")
 bot.start()
