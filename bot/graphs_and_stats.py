@@ -68,17 +68,18 @@ def linegraph(df:pd.DataFrame,activity,limit,period, measurement):
 
 def cumulative_graph(df:pd.DataFrame, activity:str, measurement:str, title:str):
     fig, ax = plt.subplots(1)
+    #iterate through each year
     for year in range(df['year'].min(),df['year'].max()+1):
         df1 = df.loc[df.year==year]
         year_data = [0] * 366
         for i in df1.index:
             year_data[df1['start_date_local'][i].timetuple().tm_yday] += df1['elapsed_time_hr'][i]
         accum_data = list(itertools.accumulate(year_data))
+        # Remove additional zeros from end of data is if year is the current year
         if year == dt.datetime.now().year:
             accum_data = accum_data[0:accum_data.index(max(accum_data))]
         ax.plot(list(range(1,len(year_data)+1)),accum_data,'-',label=year)
     ax.legend()
-    fig.autofmt_xdate()
     ax.set_title(title)
     ax.set_xlabel('Days')
     ax.grid(axis='y')
