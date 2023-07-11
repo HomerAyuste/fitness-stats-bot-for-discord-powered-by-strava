@@ -40,3 +40,8 @@ Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
+
+## TODO
+
+- [ ] Find a way to easily handle the authorization code that the user gets after going through Strava OAuth (create a website that displays code or saves it to the database)
+- [ ] Add leaderboard for users within server
