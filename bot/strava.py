@@ -24,8 +24,7 @@ def get_access_tokens(user_id,code):
         raise Exception('Error in getting access token')
 
 def get_athlete_df(user_id):
-    access_token, _, _ = refresh_athlete_tokens(user_id)
-    client = Client(access_token=access_token)
+    client= refresh_athlete_tokens(user_id)
 
     #look at activities and create a dataframe
     activities = client.get_activities()
@@ -82,11 +81,10 @@ def refresh_athlete_tokens(user_id):
         refresh_response = client.refresh_access_token(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, refresh_token=refresh_tok)
         database.update_tokens(user_id, refresh_response['access_token'],refresh_response['refresh_token'],refresh_response['expires_at'])
         print('Refreshed token saved to file')
-        access_token,refresh_tok,expires_at=refresh_response['access_token'],refresh_response['refresh_token'],refresh_response['expires_at']
     else:
         print('Token still valid, expires at {}'
             .format(time.strftime("%a, %d %b %Y %H:%M:%S %Z", time.localtime(int(expires_at)))))
-    return access_token,refresh_tok,expires_at
+    return client
 
 def deauth_user(user_id):
     access_tok,_,_= database.fetch_access_tokens(user_id)
