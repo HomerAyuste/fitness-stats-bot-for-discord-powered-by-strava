@@ -28,7 +28,7 @@ def activity_options():
                         opt_type=interactions.OptionType.STRING,
                         choices=[
                             interactions.SlashCommandChoice(name='Ride',value='Ride'),
-                            interactions.SlashCommandChoice(name='Hike',value='Hike'),
+                            interactions.SlashCommandChoice(name='Hike/Walk',value='Hike'),
                             interactions.SlashCommandChoice(name='E-Bike Ride',value='EBikeRide')
                            ])(func)
     return wrapper
@@ -38,17 +38,25 @@ def measurement_options():
         return interactions.slash_option(name='measurement',description='What measurement to use for the graph (default: time (hours))',
                         opt_type=interactions.OptionType.STRING,
                         choices=[
-                            interactions.SlashCommandChoice(name='Time',value='elapsed_time_hr'),
+                            interactions.SlashCommandChoice(name='Time',value='moving_time_hr'),
                             interactions.SlashCommandChoice(name='Distance',value='distance_km'),
                             interactions.SlashCommandChoice(name='Elevation Gain',value='total_elevation_gain')
                            ])(func)
     return wrapper
 
+def time_period_options():
+    def wrapper(func):
+        return interactions.slash_option(name='time-period',description='Time Period',
+                                         opt_type=interactions.OptionType.STRING,
+                                         choices=[
+                                             interactions.SlashCommandChoice(name='Week',value='')
+                                         ])(func)
+
 #distweek command: makes a graph from activities showing activity distance split by type and day of week
 @interactions.slash_command(name="distweek", description="Display Your Activity distance By Type and Day of Week")
 @interactions.slash_option(name='user', description='The user to show (default self)', opt_type=interactions.OptionType.USER)
 @activity_options()
-async def distWeek(ctx, user=None, activities=''):
+async def distWeek(ctx : interactions.SlashContext, user=None, activities=''):
     if(user == None):
         user = ctx.author
     title = f"{user.display_name}'s Activity Distance By Type and Day of Week" if activities=='' else f"{user.display_name}'s {activities} Distance by Day of the Week"
@@ -89,7 +97,8 @@ async def distWeek(ctx, user=None, activities=''):
                             interactions.SlashCommandChoice(name='Monthly',value='month_and_year'),
                             interactions.SlashCommandChoice(name='Yearly',value='year')
                            ])
-async def recap(ctx, user=None,activities='',time_period='All time',recap_type='moving_time_hr',interval_type='month_and_year'):
+async def recap(ctx : interactions.SlashContext, 
+                user=None,activities='',time_period='All time',recap_type='moving_time_hr',interval_type='month_and_year'):
     if(user == None):
         user = ctx.author
     title = f'{user.display_name}\'s {time_period} Recap'
@@ -125,11 +134,11 @@ async def recap_autocomplete(ctx):
 @interactions.slash_option(name='user', description='The user to show (default self)', opt_type=interactions.OptionType.USER)
 @measurement_options()
 @activity_options()
-async def cumulative(ctx, user=None, measurement='elapsed_time_hr',activities=''):
+async def cumulative(ctx : interactions.SlashContext, user=None, measurement='moving_time_hr',activities=''):
     if(user == None):
         user = ctx.author
     match measurement:
-        case 'elapsed_time_hr':
+        case 'moving_time_hr':
             title = f"{user.display_name}'s Cumulative Time Spent "
         case 'distance_km':
             title = f"{user.display_name}'s Cumulative Distance Covered "
@@ -147,6 +156,12 @@ async def cumulative(ctx, user=None, measurement='elapsed_time_hr',activities=''
     embed.set_thumbnail(url='attachment://powered.png')
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
     await ctx.send(embed=embed, files=[POWERED_IMG,image])
+
+@interactions.slash_command(name='statistics', description='Display Statistics')
+@activity_options()
+async def statistics(ctx: interactions.SlashContext, activities=''):
+    await ctx.send()
+
 
 print("bot is now running")
 bot.load_extension("loginSlashCommands")
