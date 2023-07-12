@@ -82,7 +82,13 @@ def cumulative_graph(df:pd.DataFrame, activity:str, measurement:str, title:str):
     ax.legend()
     ax.set_title(title)
     ax.set_xlabel('Days')
-    ylabel = 'Activity Duration (Hours)' if measurement=='elapsed_time_hr' else 'Activity Distance (km)'
+    match measurement:
+        case 'elapsed_time_hr':
+            ylabel = "Activity Duration (hours)"
+        case 'distance_km':
+            ylabel = "Activity Distance (km)"
+        case 'total_elevation_gain':
+            ylabel = "Activity Elevation Gain (m)"
     ax.set_ylabel(ylabel)
     ax.grid(axis='y')
     image = save_graph()

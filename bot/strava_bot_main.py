@@ -39,7 +39,8 @@ def measurement_options():
                         opt_type=interactions.OptionType.STRING,
                         choices=[
                             interactions.SlashCommandChoice(name='Time',value='elapsed_time_hr'),
-                            interactions.SlashCommandChoice(name='Distance',value='distance'),
+                            interactions.SlashCommandChoice(name='Distance',value='distance_km'),
+                            interactions.SlashCommandChoice(name='Elevation Gain',value='total_elevation_gain')
                            ])(func)
     return wrapper
 
@@ -127,7 +128,13 @@ async def recap_autocomplete(ctx):
 async def cumulative(ctx, user=None, measurement='elapsed_time_hr',activities=''):
     if(user == None):
         user = ctx.author
-    title = f"{user.display_name}'s Cumulative Time Spent " if measurement=='elapsed_time_hr' else f"{user.display_name}'s Cumulative Distance Covered "
+    match measurement:
+        case 'elapsed_time_hr':
+            title = f"{user.display_name}'s Cumulative Time Spent "
+        case 'distance_km':
+            title = f"{user.display_name}'s Cumulative Distance Covered "
+        case 'total_elevation_gain':
+            title = f"{user.display_name}'s Cumulative Elevation Gain "
     title += 'on All Activities' if activities =='' else f'on {activities} activities'
     embed = interactions.Embed(
         title=title,
