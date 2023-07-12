@@ -75,15 +75,16 @@ def cumulative_graph(df:pd.DataFrame, activity:str, measurement:str, title:str):
         for i in df1.index:
             year_data[df1['start_date_local'][i].timetuple().tm_yday] += df1[measurement][i]
         accum_data = list(itertools.accumulate(year_data))
-        # Remove additional zeros from end of data is if year is the current year
+        # Remove additional zeros from end of data if year is the current year
         if year == dt.datetime.now().year:
             accum_data = accum_data[0:accum_data.index(max(accum_data))]
         ax.plot(list(range(1,len(accum_data)+1)),accum_data,'-',label=year)
     ax.legend()
     ax.set_title(title)
     ax.set_xlabel('Days')
+    ylabel = ''
     match measurement:
-        case 'elapsed_time_hr':
+        case 'moving_time_hr':
             ylabel = "Activity Duration (hours)"
         case 'distance_km':
             ylabel = "Activity Distance (km)"
