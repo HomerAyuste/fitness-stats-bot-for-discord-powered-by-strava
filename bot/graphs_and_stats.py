@@ -8,6 +8,7 @@ from interactions import EmbedField
 import numpy as np
 import itertools
 import datetime as dt
+import math
 
 def save_graph():
     #save image in data stream
@@ -20,7 +21,7 @@ def save_graph():
     image = File(data_stream, file_name='graph.png')
     return image
 
-def recap(df : pd.DataFrame, title : str,activity, column='month_and_year', y_column='moving_time_hr'):
+def recap(df : pd.DataFrame, title : str,activity : str, column='month_and_year', y_column='moving_time_hr'):
 
     if column =='month_and_year':
         df[column] = df['month_of_year'].map(str) + '-' + df['year'].map(str)
@@ -99,14 +100,16 @@ def cumulative_graph(df:pd.DataFrame, activity:str, measurement:str, title:str):
 def stats(df : pd.DataFrame, activities : str)->list[EmbedField]:
     if activities != '':
         df = df.loc[df.type==activities]
-
+    tot_hours = df["elapsed_time_hr"].sum()
+    hours = math.floor(tot_hours)
+    minutes = math.floor((tot_hours-hours)*60)
     fields = []
     fields.append(EmbedField('Total Distance:',f'{df["distance_km"].sum():>6,.2f} km',True))
-    fields.append(EmbedField('Total Time:', f'{df["elapsed_time_hr"].sum():>6,.2f} hours',True))
+    fields.append(EmbedField('Total Time:', f'{hours:>6,d}:{minutes:d} hours',True))
     fields.append(EmbedField('Total Elevation Gain:', f'{df["total_elevation_gain"].sum():>6,.2f} metres', True))
     fields.append(EmbedField('Average Distance of Each Activity:', f'{df["distance_km"].mean():>6.2f} km', True))
     fields.append(EmbedField('Average Time of Each Activity:', f'{df["elapsed_time_hr"].mean():>6.2f} hours', True))
     fields.append(EmbedField('Average Climb of Each Activity:', f'{df["total_elevation_gain"].mean():>6.2f} metres', True))
-    fields.append(EmbedField('Best Average Pace/Speed:',f'{df["average_speed_kph"].max():>6.2f}', True))
+    fields.append(EmbedField('Best Average Pace/Speed:',f'{df["average_speed_kph"].max():>6.2f} km/h', True))
     fields.append(EmbedField('Longest Activity by Distance:',f'{df["distance_km"].max():>6.2f} km', True))
     return fields
