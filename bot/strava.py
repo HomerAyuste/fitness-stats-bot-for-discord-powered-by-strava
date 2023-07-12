@@ -69,6 +69,9 @@ def get_athlete_df(user_id):
     # Convert timings to hours for plotting
     df['elapsed_time_hr'] = df['elapsed_time'].dt.seconds/3600
     df['moving_time_hr'] = df['moving_time'].dt.seconds/3600
+    #Convert speeds to km/h
+    df['average_speed_kph'] = df['average_speed'] * 3.6
+    df['max_speed_kph'] = df['max_speed'] * 3.6
 
     return df
 
