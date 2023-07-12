@@ -8,7 +8,7 @@ from interactions import EmbedField
 import numpy as np
 import itertools
 import datetime as dt
-import math
+from math import floor
 
 def save_graph():
     #save image in data stream
@@ -101,17 +101,21 @@ def stats(df : pd.DataFrame, activities : str)->list[EmbedField]:
     if activities != '':
         df = df.loc[df.type==activities]
     tot_hours = df["elapsed_time_hr"].sum()
-    hours = math.floor(tot_hours)
-    minutes = math.floor((tot_hours-hours)*60)
+    hours = floor(tot_hours)
+    minutes = floor((tot_hours-hours)*60)
     max_dist = df["distance_km"].max()
     max_speed = df["average_speed_kph"].max()
     fields = []
     fields.append(EmbedField('Total Distance:',f'{df["distance_km"].sum():>6,.2f} km',True))
-    fields.append(EmbedField('Total Time:', f'{hours:>6,d}:{minutes:02d} hours',True))
-    fields.append(EmbedField('Total Elevation Gain:', f'{df["total_elevation_gain"].sum():>6,.2f} metres', True))
+    fields.append(EmbedField(':stopwatch: Total Time:', f'{hours:>6,d}:{minutes:02d} hours',True))
+    fields.append(EmbedField(':mountain_snow: Total Elevation Gain:', f'{df["total_elevation_gain"].sum():>6,.2f} metres', True))
     fields.append(EmbedField('Average Distance of Each Activity:', f'{df["distance_km"].mean():>6.2f} km', True))
-    fields.append(EmbedField('Average Time of Each Activity:', f'{df["elapsed_time_hr"].mean():>6.2f} hours', True))
-    fields.append(EmbedField('Average Climb of Each Activity:', f'{df["total_elevation_gain"].mean():>6.2f} metres', True))
-    fields.append(EmbedField('Best Average Pace/Speed:',f'{max_speed:>6.2f} km/h - {df["start_date_local"].loc[df.average_speed_kph == max_speed].iloc[0].strftime("%b %-d %Y")}', True))
+    tot_hours = df["elapsed_time_hr"].mean()
+    hours = floor(tot_hours)
+    minutes = floor((tot_hours-hours)*60)
+    fields.append(EmbedField(':stopwatch: Average Time of Each Activity:', f'{hours:>6,d}:{minutes:02d} hours', True))
+    fields.append(EmbedField(':mountain_snow: Average Climb of Each Activity:', f'{df["total_elevation_gain"].mean():>6.2f} metres', True))
+    fields.append(EmbedField("Overall Average Pace/Speed of Each Activity: ", f'{df["average_speed_kph"].mean():>6.2f} km/h'))
+    fields.append(EmbedField('Best Average Pace/Speed in an Activity:',f'{max_speed:>6.2f} km/h - {df["start_date_local"].loc[df.average_speed_kph == max_speed].iloc[0].strftime("%b %-d %Y")}', True))
     fields.append(EmbedField('Longest Activity by Distance:',f'{max_dist:>6.2f} km - {df["start_date_local"].loc[df.distance_km == max_dist].iloc[0].strftime("%b %-d %Y")}', True))
     return fields
