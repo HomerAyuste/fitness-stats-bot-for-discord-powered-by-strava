@@ -13,7 +13,7 @@ class Login(interactions.Extension):
     #login command: gives user strava auth url
     @interactions.slash_command(name='login',description = f'Gives you a link to connect your Strava account to {BOTNAME}',
                                 sub_cmd_name='link', sub_cmd_description=f'Gives you a link to connect your Strava account to {BOTNAME}')
-    async def login(self, ctx):
+    async def login(self, ctx: interactions.SlashContext):
         embed = interactions.Embed(
             title="Strava Login",
             description=f"[Click here]({AUTH_URL}) to connect your Strava account to {BOTNAME}",
@@ -27,7 +27,7 @@ class Login(interactions.Extension):
 
     @login.subcommand(sub_cmd_name='enter_code', sub_cmd_description='Enter code from localhost')
     @interactions.slash_option(name='code', description='Enter code from localhost here', opt_type=interactions.OptionType.STRING)
-    async def enter_code(self, ctx,code=''):
+    async def enter_code(self, ctx: interactions.SlashContext,code=''):
         try:
             strava.get_access_tokens(ctx.author.username,code)
             embed = interactions.Embed(
@@ -47,7 +47,7 @@ class Login(interactions.Extension):
             await ctx.send(embed = embed,ephemeral=True)
         
     @login.subcommand(sub_cmd_name='disconnect', sub_cmd_description=f'Disconnect your strava account from {BOTNAME}')
-    async def disconnect(self, ctx):
+    async def disconnect(self, ctx: interactions.SlashContext):
         components: list[interactions.ActionRow] = interactions.spread_to_rows(
             interactions.Button(
                 custom_id='yes',
