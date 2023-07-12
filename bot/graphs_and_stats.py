@@ -101,12 +101,12 @@ def stats(df : pd.DataFrame, activities : str)->list[EmbedField]:
         df = df.loc[df.type==activities]
 
     fields = []
-    fields.append(EmbedField(value=f'Total Distance: {df["distance_km"].sum():>6,.2f} km'))
-    fields.append(EmbedField('total_time', f'Total Time: {df["elapsed_time_hr"].sum():>6,.2f} hours,True'))
-    fields.append(EmbedField('total_elev', f'Total Elevation Gain: {df["total_elevation_gain"].sum():>6.2f} metres'))
-    fields.append(EmbedField('avg_dist', f'Average Distance of Each Activity: {df["distance_km"].mean():>6.2f} km'))
-    fields.append(EmbedField('avg_time', f'Average Time of Each Activity: {df["elapsed_time_hr"].mean():>6.2f} hours'))
-    fields.append(EmbedField('avg_elev', f'Average Climb of Each Activity: {df["total_elevation_gain"].mean():>6.2f} metres'))
-    fields.append(EmbedField('best_pace',f'Best Pace/Speed: {df["average_speed"].max():>6.2f}'))
-    fields.append(EmbedField('longest_dist',f'Longest Activity by Distance: {df["distance_km"].max():>6.2f} km'))
+    fields.append(EmbedField('Total Distance:',f'{df["distance_km"].sum():>6,.2f} km',True))
+    fields.append(EmbedField('Total Time:', f'{df["elapsed_time_hr"].sum():>6,.2f} hours',True))
+    fields.append(EmbedField('Total Elevation Gain:', f'{df["total_elevation_gain"].sum():>6.2f} metres', True))
+    fields.append(EmbedField('Average Distance of Each Activity:', f'{df["distance_km"].mean():>6.2f} km', True))
+    fields.append(EmbedField('Average Time of Each Activity:', f'{df["elapsed_time_hr"].mean():>6.2f} hours', True))
+    fields.append(EmbedField('Average Climb of Each Activity:', f'{df["total_elevation_gain"].mean():>6.2f} metres', True))
+    fields.append(EmbedField('Best Pace/Speed:',f'{df["average_speed"].max():>6.2f}', True))
+    fields.append(EmbedField('Longest Activity by Distance:',f'{df["distance_km"].max():>6.2f} km', True))
     return fields
