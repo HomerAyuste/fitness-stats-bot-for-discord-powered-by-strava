@@ -51,6 +51,7 @@ def time_period_options():
                                          choices=[
                                              interactions.SlashCommandChoice(name='Week',value='')
                                          ])(func)
+    return wrapper
 
 #distweek command: makes a graph from activities showing activity distance split by type and day of week
 @interactions.slash_command(name="distweek", description="Display Your Activity distance By Type and Day of Week")
@@ -114,8 +115,8 @@ async def recap(ctx : interactions.SlashContext,
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
     await ctx.send(embed=embed, files=[POWERED_IMG,image])
 
-@recap.autocomplete('time_period')
-async def recap_autocomplete(ctx):
+@recap.autocomplete('time_period_options')
+async def recap_autocomplete(ctx : interactions.AutocompleteContext):
     await ctx.send(
         choices=[
             {
@@ -158,9 +159,24 @@ async def cumulative(ctx : interactions.SlashContext, user=None, measurement='mo
     await ctx.send(embed=embed, files=[POWERED_IMG,image])
 
 @interactions.slash_command(name='statistics', description='Display Statistics')
+@interactions.slash_option(name='user', description='The user to show (default self)', opt_type=interactions.OptionType.USER)
 @activity_options()
-async def statistics(ctx: interactions.SlashContext, activities=''):
-    await ctx.send()
+async def statistics(ctx: interactions.SlashContext, user=None,activities=''):
+    if user==None:
+        user = ctx.author
+    #TODO: add field for total distance, total time, total elevation, best pace, longest activity
+    title = f'{user.display_name}\'s {activities} Statistics'
+    embed = interactions.Embed(
+        title=title,
+        color = ORANGE
+    )
+    embed.set_thumbnail(url='attachment://powered.png')
+    embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
+    await ctx.defer()
+    df = strava.get_athlete_df(user.username)
+    embed.fields=graphs.stats(df,activities)
+    
+    await ctx.send(embed=embed, files=[POWERED_IMG])
 
 
 print("bot is now running")
