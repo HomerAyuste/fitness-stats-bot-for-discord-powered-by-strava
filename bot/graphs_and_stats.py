@@ -71,10 +71,10 @@ def linegraph(df:pd.DataFrame,activity,limit,period, measurement):
 def cumulative_graph(df:pd.DataFrame, activity:str, measurement:str, title:str):
     #iterate through each year
     for year in range(df['year'].min(),df['year'].max()+1):
-        df = df.loc[df.year==year] if activity == '' else df.loc[(df.year==year) & (df.type==activity)]
+        df1 = df.loc[df.year==year] if activity == '' else df.loc[(df.year==year) & (df.type==activity)]
         year_data = [0] * 366
-        for i in df.index:
-            year_data[df['start_date_local'][i].timetuple().tm_yday] += df[measurement][i]
+        for i in df1.index:
+            year_data[df1['start_date_local'][i].timetuple().tm_yday] += df1[measurement][i]
         accum_data = list(itertools.accumulate(year_data))
         # Remove additional zeros from end of data if year is the current year
         if year == dt.datetime.now().year:
