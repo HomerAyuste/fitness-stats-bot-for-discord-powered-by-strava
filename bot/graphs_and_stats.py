@@ -69,7 +69,6 @@ def linegraph(df:pd.DataFrame,activity,limit,period, measurement):
     return
 
 def cumulative_graph(df:pd.DataFrame, activity:str, measurement:str, title:str):
-    fig, ax = plt.subplots(1)
     #iterate through each year
     for year in range(df['year'].min(),df['year'].max()+1):
         df = df.loc[df.year==year] if activity == '' else df.loc[(df.year==year) & (df.type==activity)]
@@ -80,10 +79,11 @@ def cumulative_graph(df:pd.DataFrame, activity:str, measurement:str, title:str):
         # Remove additional zeros from end of data if year is the current year
         if year == dt.datetime.now().year:
             accum_data = accum_data[0:accum_data.index(max(accum_data))]
-        ax.plot(list(range(1,len(accum_data)+1)),accum_data,'-',label=year)
-    ax.legend()
-    ax.set_title(title)
-    ax.set_xlabel('Days')
+        print(year)
+        plt.plot(list(range(1,len(accum_data)+1)),accum_data,label=year)
+    plt.legend()
+    plt.title(title)
+    plt.xlabel('Days')
     ylabel = ''
     match measurement:
         case 'moving_time_hr':
@@ -92,8 +92,8 @@ def cumulative_graph(df:pd.DataFrame, activity:str, measurement:str, title:str):
             ylabel = "Activity Distance (km)"
         case 'total_elevation_gain':
             ylabel = "Activity Elevation Gain (m)"
-    ax.set_ylabel(ylabel)
-    ax.grid(axis='y')
+    plt.ylabel(ylabel)
+    plt.grid(axis='y')
     image = save_graph()
     return image
 
