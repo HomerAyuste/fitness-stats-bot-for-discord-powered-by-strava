@@ -3,7 +3,7 @@
 discord-py-interactions==5.7.0
 matplotlib==3.7.1
 numpy==1.24.3
-pandas==2.0.2
+pandas==2.1.1
 python-dotenv==1.0.0
 seaborn==0.12.2
 stravalib==1.3.3
