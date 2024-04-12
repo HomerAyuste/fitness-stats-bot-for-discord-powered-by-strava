@@ -179,6 +179,9 @@ async def statistics(ctx: interactions.SlashContext, user=None,activities=''):
     await ctx.send(embed=embed, files=[POWERED_IMG])
 
 
-print("bot is now running")
+print("starting up the bot")
 bot.load_extension("loginSlashCommands")
-bot.start()
+try:
+    bot.start()
+except:
+    print("start up did not work")
