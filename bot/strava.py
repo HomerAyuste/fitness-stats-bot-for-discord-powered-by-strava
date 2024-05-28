@@ -6,6 +6,7 @@ from stravalib import Client
 import time
 import pandas as pd
 import database
+import re
 
 #get client id and secret from .env
 load_dotenv()
@@ -14,10 +15,14 @@ CLIENT_ID = os.getenv('STRAVA_CLIENT_ID')
 
 client = Client()
 
+def regex(url):
+    code = re.search("code\=.*\&",url)
+    return code.group()[5:-1]
+
 #Get access code by exchanging with auth code (access code lasts for 6hrs)
-def get_access_tokens(user_id,code):
+def get_access_tokens(user_id,url):
     try:
-        client = Client()
+        code = regex(url)
         access_token = client.exchange_code_for_token(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, code=code)
         database.insert_val(user_id,code,access_token['access_token'],access_token['refresh_token'],access_token['expires_at'])
     except:

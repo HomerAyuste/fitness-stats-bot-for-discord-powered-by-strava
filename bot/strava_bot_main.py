@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 import strava
 import interactions
-import graphs_and_stats as graphs
+from graphs_and_stats import stats
 
 ORANGE='#FC4C02'
 BOTNAME='Fitness Stats Bot'
@@ -67,7 +67,7 @@ async def distWeek(ctx : interactions.SlashContext, user=None, activities=''):
     )
     await ctx.defer()
     df = strava.get_athlete_df(user.username)
-    image = graphs.distweek(df,activities,title)
+    image = stats.distweek(df,activities,title)
     embed.set_image(url='attachment://graph.png')
     embed.set_thumbnail(url='attachment://powered.png')
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
@@ -109,7 +109,7 @@ async def recap(ctx : interactions.SlashContext,
     )
     await ctx.defer()
     df = strava.get_athlete_df(user.username)
-    image = graphs.recap(df, title,activities,y_column=recap_type)
+    image = stats.recap(df, title,activities,y_column=recap_type)
     embed.set_image(url='attachment://graph.png')
     embed.set_thumbnail(url='attachment://powered.png')
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
@@ -152,7 +152,7 @@ async def cumulative(ctx : interactions.SlashContext, user=None, measurement='mo
     )
     await ctx.defer()
     df = strava.get_athlete_df(user.username)
-    image = graphs.cumulative_graph(df,activities,measurement,title)
+    image = stats.cumulative_graph(df,activities,measurement,title)
     embed.set_image(url='attachment://graph.png')
     embed.set_thumbnail(url='attachment://powered.png')
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
@@ -174,7 +174,7 @@ async def statistics(ctx: interactions.SlashContext, user=None,activities=''):
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
     await ctx.defer()
     df = strava.get_athlete_df(user.username)
-    embed.fields=graphs.stats(df,activities)
+    embed.fields=stats.stats(df,activities)
     
     await ctx.send(embed=embed, files=[POWERED_IMG])
 
