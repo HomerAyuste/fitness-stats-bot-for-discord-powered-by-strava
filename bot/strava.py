@@ -17,7 +17,7 @@ client = Client()
 
 def regex(url):
     code = re.search("code\=.*\&",url)
-    return code.group()[5:-2]
+    return code.group()[5:-1]
 
 #Get access code by exchanging with auth code (access code lasts for 6hrs)
 def get_access_tokens(user_id,url):
