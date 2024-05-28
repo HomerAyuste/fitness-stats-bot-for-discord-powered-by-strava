@@ -15,9 +15,14 @@ CLIENT_ID = os.getenv('STRAVA_CLIENT_ID')
 
 client = Client()
 
+def regex(url):
+    code = re.search("code=.*&&",url)
+    return code.string[5:-2]
+
 #Get access code by exchanging with auth code (access code lasts for 6hrs)
-def get_access_tokens(user_id,code):
+def get_access_tokens(user_id,url):
     try:
+        code = regex(url)
         access_token = client.exchange_code_for_token(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, code=code)
         database.insert_val(user_id,code,access_token['access_token'],access_token['refresh_token'],access_token['expires_at'])
     except:
