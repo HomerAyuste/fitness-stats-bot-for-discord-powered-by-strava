@@ -25,11 +25,11 @@ class Login(interactions.Extension):
         embed.set_image('attachment://connect.png')
         await ctx.send(embed=embed, files=[POWERED_IMG,CONNECT_IMG], ephemeral = True)
 
-    @login.subcommand(sub_cmd_name='enter_code', sub_cmd_description='Enter code from localhost')
-    @interactions.slash_option(name='code', description='Enter code from localhost here', opt_type=interactions.OptionType.STRING)
-    async def enter_code(self, ctx: interactions.SlashContext,code=''):
+    @login.subcommand(sub_cmd_name='enter_auth_url', sub_cmd_description='Enter the url from localhost')
+    @interactions.slash_option(name='url', description='Enter url from localhost here', opt_type=interactions.OptionType.STRING)
+    async def enter_url(self, ctx: interactions.SlashContext,url=''):
         try:
-            strava.get_access_tokens(ctx.author.username,code)
+            strava.get_access_tokens(ctx.author.username,url)
             embed = interactions.Embed(
                 title="Strava Login",
                 description=f"Success! You're logged in now!",
@@ -41,7 +41,7 @@ class Login(interactions.Extension):
         except:
             embed = interactions.Embed(
                 title="Strava Login",
-                description=f"Error! Code did not work.",
+                description=f"Error! Code from the url did not work.",
                 color=ORANGE
             )
             await ctx.send(embed = embed,ephemeral=True)
