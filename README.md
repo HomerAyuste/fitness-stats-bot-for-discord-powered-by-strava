@@ -1,4 +1,8 @@
-# Fitness Stats Bot for Discord (Powered by Strava)
+<div align="center">
+    <h1>
+        Fitness Stats Bot for Discord (Powered by Strava)
+    </h1>
+</div>
 
 **This is still a work in progress.**
 
@@ -14,6 +18,11 @@ The repository contains the code for a Python-based Discord bot. The bot is curr
 
 [Server link](https://discord.gg/eXr876pt9Y) if you would like to chat with me about the bot or find other Strava users on Discord.
 
+## 🚲 Features
+
+- Connect your Strava account to Fitness Stats Bot to see statistics and graphs about your Strava activities using slash commands
+- 
+    
 ## Installation
 
 If you would like to host this bot on your own machine, you can follow these steps:
@@ -34,6 +43,8 @@ If you would like to host this bot on your own machine, you can follow these ste
       - You can get the Strava Client ID and Client Secret by creating your own Strava application. Follow section B in [this guide](https://developers.strava.com/docs/getting-started/) to find out how to make your Strava app.
 6. 
 
+## Bot Demo
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first
@@ -45,3 +56,4 @@ Please make sure to update tests as appropriate.
 
 - [ ] Find a way to easily handle the authorization code that the user gets after going through Strava OAuth (create a website that displays code or saves it to the database)
 - [ ] Add leaderboard for users within server
+- [ ] Create a command that lets users display their latest activity
