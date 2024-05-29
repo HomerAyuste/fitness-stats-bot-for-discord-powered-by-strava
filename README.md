@@ -21,7 +21,7 @@ The repository contains the code for a Python-based Discord bot. The bot is curr
 ## 🚲 Features
 
 - Connect your Strava account to Fitness Stats Bot to see statistics and graphs about your Strava activities using slash commands
-- 
+- Bot displays graphs and stats using embeds
     
 ## Installation
 
