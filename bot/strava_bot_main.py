@@ -175,7 +175,7 @@ async def statistics(ctx: interactions.SlashContext, user=None,activities=''):
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
     await ctx.defer()
     df = strava.get_athlete_df(user.username)
-    embed.fields=stat.stats(df=df, activities=activities)
+    embed.fields=stat.statistics(df=df, activities=activities)
     
     await ctx.send(embed=embed, files=[POWERED_IMG])
 
