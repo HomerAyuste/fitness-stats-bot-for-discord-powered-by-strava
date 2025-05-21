@@ -67,7 +67,7 @@ async def distWeek(ctx : interactions.SlashContext, user=None, activities=''):
     )
     await ctx.defer()
     df = strava.get_athlete_df(user.username)
-    image = stats.distweek(df,activities,title)
+    image = stats.distweek(df=df,activities=activities,title=title)
     embed.set_image(url='attachment://graph.png')
     embed.set_thumbnail(url='attachment://powered.png')
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
@@ -109,7 +109,7 @@ async def recap(ctx : interactions.SlashContext,
     )
     await ctx.defer()
     df = strava.get_athlete_df(user.username)
-    image = stats.recap(df, title,activities,y_column=recap_type)
+    image = stats.recap(df=df, title=title, activity=activities, y_column=recap_type)
     embed.set_image(url='attachment://graph.png')
     embed.set_thumbnail(url='attachment://powered.png')
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
@@ -174,7 +174,7 @@ async def statistics(ctx: interactions.SlashContext, user=None,activities=''):
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
     await ctx.defer()
     df = strava.get_athlete_df(user.username)
-    embed.fields=stats.stats(df,activities)
+    embed.fields=stats.stats(df=df, activities=activities)
     
     await ctx.send(embed=embed, files=[POWERED_IMG])
 
