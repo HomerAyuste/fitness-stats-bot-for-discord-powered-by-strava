@@ -12,7 +12,7 @@ from math import floor
 
 
 class stats:
-    def save_graph():
+    def save_graph(self):
         #save image in data stream
         data_stream = io.BytesIO()
         #plt.figure(figsize=(10,6))
@@ -23,7 +23,7 @@ class stats:
         image = File(data_stream, file_name='graph.png')
         return image
 
-    def recap(self, df : pd.DataFrame, title : str,activity : str, column='month_and_year', y_column='moving_time_hr'):
+    def recap(self, df : pd.DataFrame, title : str,activity : str, column='month_and_year', y_column='moving_time_hr')-> File:
 
         if column =='month_and_year':
             df[column] = df['month_of_year'].map(str) + '-' + df['year'].map(str)
@@ -40,7 +40,7 @@ class stats:
         image = self.save_graph()
         return image
 
-    def distweek(self, df : pd.DataFrame,activities : str,title :str):
+    def distweek(self, df : pd.DataFrame,activities : str,title :str)->File:
         day_of_week_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday' ]
         g = sns.catplot(x='day_of_week', y='distance_km', kind='strip',
                         data=df if activities=='' else df.loc[df['type']==activities],
@@ -59,10 +59,10 @@ class stats:
         image = self.save_graph()
         return image
 
-    def distance_leaderboard():
+    def distance_leaderboard(self):
         return
 
-    def linegraph(df:pd.DataFrame,activity,limit,period, measurement):
+    def linegraph(self, df:pd.DataFrame, activity,limit,period, measurement):
         if activity != None:
             df = df.loc[df.type == activity]
         x = df.starting_date_local
@@ -70,7 +70,7 @@ class stats:
         plt.plot(x,y)
         return
 
-    def cumulative_graph(self,df:pd.DataFrame, activity:str, measurement:str, title:str):
+    def cumulative_graph(self, df:pd.DataFrame, activity:str, measurement:str, title:str)->File:
         #iterate through each year
         for year in range(df['year'].min(),df['year'].max()+1):
             df1 = df.loc[df.year==year] if activity == '' else df.loc[(df.year==year) & (df.type==activity)]
