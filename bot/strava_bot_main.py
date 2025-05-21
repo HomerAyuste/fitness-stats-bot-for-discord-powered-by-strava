@@ -10,6 +10,7 @@ ORANGE='#FC4C02'
 BOTNAME='Fitness Stats Bot'
 POWERED='Powered by Strava'
 POWERED_IMG = interactions.File('./images/api_logo_pwrdBy_strava_stack_light.png',file_name='powered.png')
+stat = stats()
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -67,7 +68,7 @@ async def distWeek(ctx : interactions.SlashContext, user=None, activities=''):
     )
     await ctx.defer()
     df = strava.get_athlete_df(user.username)
-    image = stats.distweek(df=df,activities=activities,title=title)
+    image = stat.distweek(df=df,activities=activities,title=title)
     embed.set_image(url='attachment://graph.png')
     embed.set_thumbnail(url='attachment://powered.png')
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
@@ -109,7 +110,7 @@ async def recap(ctx : interactions.SlashContext,
     )
     await ctx.defer()
     df = strava.get_athlete_df(user.username)
-    image = stats.recap(df=df, title=title, activity=activities, y_column=recap_type)
+    image = stat.recap(df=df, title=title, activity=activities, y_column=recap_type)
     embed.set_image(url='attachment://graph.png')
     embed.set_thumbnail(url='attachment://powered.png')
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
@@ -152,7 +153,7 @@ async def cumulative(ctx : interactions.SlashContext, user=None, measurement='mo
     )
     await ctx.defer()
     df = strava.get_athlete_df(user.username)
-    image = stats.cumulative_graph(df,activities,measurement,title)
+    image = stat.cumulative_graph(df,activities,measurement,title)
     embed.set_image(url='attachment://graph.png')
     embed.set_thumbnail(url='attachment://powered.png')
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
@@ -174,7 +175,7 @@ async def statistics(ctx: interactions.SlashContext, user=None,activities=''):
     embed.set_footer(f'{POWERED}',icon_url="attachment://powered.png")
     await ctx.defer()
     df = strava.get_athlete_df(user.username)
-    embed.fields=stats.stats(df=df, activities=activities)
+    embed.fields=stat.stats(df=df, activities=activities)
     
     await ctx.send(embed=embed, files=[POWERED_IMG])
 
