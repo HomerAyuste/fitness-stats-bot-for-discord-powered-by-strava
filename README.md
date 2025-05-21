@@ -44,6 +44,11 @@ If you would like to host this bot on your own machine, you can follow these ste
 6. 
 
 ## Bot Demo
+<figure><center>
+<img alt="A graph showing the use of the Cumulative command on discord which displays a user's cumulative distance travelled for each year." title="Cumulative command showing a user's cumulative distance travelled for each year." src="images/demo_image1.png" width=600>
+<figcaption>Cumulative command showing a user's cumulative distance travelled for each year.</figcaption>
+</center>
+</figure>
 
 ## Contributing
 
