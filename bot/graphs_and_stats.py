@@ -99,7 +99,7 @@ class stats:
         image = self.save_graph()
         return image
 
-    def statistics(df : pd.DataFrame, activities : str)->list[EmbedField]:
+    def statistics(self, df : pd.DataFrame, activities : str)->list[EmbedField]:
         if activities != '':
             df = df.loc[df.type==activities]
         tot_hours = df["elapsed_time_hr"].sum()
